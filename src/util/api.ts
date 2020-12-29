@@ -13,5 +13,5 @@ export const createApiHandler = (handlers: Handlers): NextApiHandler => async (
   res: NextApiResponse
 ) => {
   await connectMongo();
-  handlers[req.method](req, res);
+  return handlers[req.method](req, res);
 };
