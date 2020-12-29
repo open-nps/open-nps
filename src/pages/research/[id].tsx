@@ -66,7 +66,7 @@ export const ResearchPage = ({ mui, themeOpts, templates, researchId }: Props) =
     const { ok } = await response.json()
 
     if (ok) {
-      router.push('/research/thanks')
+      router.push(`/research/thanks?researchId=${researchId}`)
     }
   }
 

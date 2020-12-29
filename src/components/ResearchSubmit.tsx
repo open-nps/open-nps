@@ -16,7 +16,7 @@ const Button = withStyles((theme) => ({
 }))(MUIButton);
 
 export const ResearchSubmit = ({ themeOpts, children }: Props) => (
-  <Button color={themeOpts.ResearchSubmitBtnColor} variant="contained">
+  <Button color={themeOpts.ResearchSubmitBtnColor} variant="contained" type="submit">
     { children }
   </Button>
 )

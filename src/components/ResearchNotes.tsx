@@ -2,9 +2,9 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { withStyles, WithStyles } from '@material-ui/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 
-const styles = () => ({
+const styles = () => createStyles({
   buttonDiv: {
     width: '100%',
     display: 'flex',
