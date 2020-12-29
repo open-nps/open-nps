@@ -1,3 +1,4 @@
+declare type MUIColors = 'primary' | 'secondary';
 declare type MUIVariants = 'outlined' | 'contained' | 'text';
 declare type MUISizes = 'small' | 'medium' | 'large';
 declare type ThemeBorder = {
@@ -8,8 +9,8 @@ declare type ThemeBorder = {
 declare interface ThemeOptionsConfigValues {
   // Theme Config for ResearchNotes
   ResearchNotesBtnGroupActive: Boolean;
-  ResearchNotesBtnVariant: MUIVariants;
   ResearchNotesBtnSize: MUISizes;
+  ResearchNotesBtnColor: MUIColors;
 
   // Theme Config For ResearchComment
   ResearchCommentSize: MUISizes;
@@ -17,4 +18,5 @@ declare interface ThemeOptionsConfigValues {
   // Theme Config for ResearchSubmitButton
   ResearchSubmitBtnSize: MUISizes;
   ResearchSubmitBtnVariant: MUIVariants;
+  ResearchSubmitBtnColor: MUIColors;
 }

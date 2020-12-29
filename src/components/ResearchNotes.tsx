@@ -2,13 +2,23 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { withStyles, WithStyles } from '@material-ui/styles';
 
-interface Props {
+const styles = () => ({
+  buttonDiv: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-around',
+  }
+});
+
+interface Props extends WithStyles<typeof styles>{
   themeOpts: ThemeOptionsConfigValues;
+  selected: number;
   setValue: (value: string) => any;
 }
 
-const renderNotes = (themeOpts: ThemeOptionsConfigValues, setValue) => Object.keys(
+const renderNotes = (themeOpts: ThemeOptionsConfigValues, selected, setValue) => Object.keys(
   (new Array(10)).fill(1)
 ).map((val) => {
   const note = parseInt(val) + 1;
@@ -17,21 +27,20 @@ const renderNotes = (themeOpts: ThemeOptionsConfigValues, setValue) => Object.ke
       key={`nps-${val}`}
       onClick={() => setValue(note)}
       size={themeOpts.ResearchNotesBtnSize}
-      variant={themeOpts.ResearchNotesBtnVariant}
-      color="primary"
+      variant={note === selected ? 'contained' : 'outlined'}
+      color={themeOpts.ResearchNotesBtnColor}
     >
       {note}
     </Button>
   )
 })
 
-export const ResearchNotes = ({ themeOpts, setValue }: Props) =>
+export const ResearchNotes = ({ themeOpts, selected, setValue, classes }: Props) =>
   !themeOpts.ResearchNotesBtnGroupActive
-  ? (<div>{ renderNotes(themeOpts, setValue) }</div>)
+  ? (<div className={classes.buttonDiv}>{ renderNotes(themeOpts, selected, setValue) }</div>)
   : (
-    <ButtonGroup
-      variant={themeOpts.ResearchNotesBtnVariant}
-      size={themeOpts.ResearchNotesBtnSize}
-    >
-      { renderNotes(themeOpts, setValue) }
+    <ButtonGroup>
+      { renderNotes(themeOpts, selected, setValue) }
     </ButtonGroup>);
+
+export default withStyles(styles)(ResearchNotes);

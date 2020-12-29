@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { ThemeProvider, createMuiTheme, ThemeOptions } from '@material-ui/core/styles';
-import { ResearchNotes } from '../../components/ResearchNotes';
-import { ResearchComment } from '../../components/ResearchComment';
+import { ThemeProvider, createMuiTheme, ThemeOptions, makeStyles } from '@material-ui/core/styles';
+import ResearchNotes from '../../components/ResearchNotes';
+import ResearchComment from '../../components/ResearchComment';
+import ResearchSubmit from '../../components/ResearchSubmit';
 
 import { Target, Research } from '../../model';
 import { AddThemeOptsDefaults } from '../../util/themeOpts';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { GetServerSidePropsContext } from 'next';
+
+const useStyles = makeStyles(() => ({
+  root: {
+    maxWidth: '800px',
+    margin: '0 auto',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+}))
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const { connectMongo } = await import('../../util/mongo');
@@ -36,6 +49,7 @@ interface Props {
 export const ResearchPage = ({ mui, themeOpts, templates, researchId }: Props) => {
   const [ state, setState ] = useState({ note: null, comment: '' });
   const router = useRouter();
+  const classes = useStyles();
   const setValueForField = (field) => (value) => setState({ ...state, [field]: value });
 
   const onSubmit = async (e) => {
@@ -67,13 +81,11 @@ export const ResearchPage = ({ mui, themeOpts, templates, researchId }: Props) =
   return (
     <ThemeProvider theme={createMuiTheme(mui)}>
       <CssBaseline />
-      <form onSubmit={onSubmit}>
+      <form className={classes.root} onSubmit={onSubmit}>
         <h2> { templates.CoreQuestionPhrase } </h2>
-        <ResearchNotes themeOpts={themeOpts} setValue={setValueForField('note')}/>
-        <ResearchComment value={state.comment} setValue={setValueForField('comment')}/>
-        <button>
-          Enviar
-        </button>
+        <ResearchNotes themeOpts={themeOpts} setValue={setValueForField('note')} selected={state.note} />
+        <ResearchComment value={state.comment} setValue={setValueForField('comment')} label={templates.ResearchCommentLabel} placeholder={templates.ResearchCommentPlaceholder}/>
+        <ResearchSubmit themeOpts={themeOpts}>Enviar</ResearchSubmit>
       </form>
     </ThemeProvider>
   )

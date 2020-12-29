@@ -1,5 +1,8 @@
 export const AddThemeOptsDefaults = (themeOpts: ThemeOptionsConfigValues) => ({
   ResearchNotesBtnSize: 'medium',
-  ResearchNotesBtnVariant: 'contained',
+  ResearchSubmitBtnSize: 'medium',
+  ResearchSubmitBtnVariant: 'contained',
+  ResearchNotesBtnColor: 'primary',
+  ResearchSubmitBtnColor: 'primary',
   ...themeOpts,
 })
