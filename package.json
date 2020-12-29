@@ -13,6 +13,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/styles": "^4.11.2",
+    "lodash.merge": "^4.6.2",
     "mongoose": "^5.11.8",
     "mongoose-timestamp": "^0.6.0",
     "next": "^10.0.4",

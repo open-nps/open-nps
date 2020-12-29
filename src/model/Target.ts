@@ -14,7 +14,6 @@ export const TargetSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    index: 1
   },
   meta: {
     type: Object,

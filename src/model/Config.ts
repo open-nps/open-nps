@@ -12,8 +12,13 @@ export interface IConfig extends Document {
 export const ConfigSchema = new Schema({
   key: {
     type: String,
-    enum: ['theme', 'templates'],
+    enum: ['themeOpts', 'mui', 'templates'],
     required: true,
+  },
+  alias: {
+    type: String,
+    required: true,
+    unique: true
   },
   values: {
     type: Object,
