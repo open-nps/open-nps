@@ -1,4 +1,14 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import { ITarget } from './Target';
+import { IReviewer } from './Reviewer';
+
+export interface IResearch extends Document {
+  target?: string | ITarget;
+  reviewer?: string | IReviewer;
+  concluded?: boolean;
+  value?: number;
+  comment?: string
+}
 
 export const ResearchSchema = new Schema({
   target: {
@@ -11,7 +21,7 @@ export const ResearchSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
-  value: {
+  note: {
     type: Number,
     max: 10,
     min: 1,
@@ -25,5 +35,5 @@ export const ResearchSchema = new Schema({
   }
 });
 
-export default mongoose.models.Research || mongoose.model('Research', ResearchSchema);
+export default mongoose.models.Research || mongoose.model<IResearch>('Research', ResearchSchema);
 

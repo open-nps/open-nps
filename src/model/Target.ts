@@ -1,4 +1,10 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { IConfig } from './Config';
+
+export interface ITarget extends Document {
+  name: string;
+  configs: string[] | IConfig[];
+}
 
 export const TargetSchema = new Schema({
   name: {
@@ -11,4 +17,4 @@ export const TargetSchema = new Schema({
   }]
 });
 
-export default mongoose.models.Target || mongoose.model('Target', TargetSchema)
+export default mongoose.models.Target || mongoose.model<ITarget>('Target', TargetSchema)

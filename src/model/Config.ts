@@ -1,8 +1,17 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { ThemeOptions } from '@material-ui/core';
+
+type KeyTypes = 'mui' | 'theme' | 'templates';
+
+export interface IConfig extends Document {
+  key: KeyTypes;
+  values: ThemeOptionsConfigValues | ThemeOptions | TemplatesConfigValues
+}
 
 export const ConfigSchema = new Schema({
   key: {
     type: String,
+    enum: ['theme', 'templates'],
     required: true,
   },
   values: {
@@ -12,4 +21,4 @@ export const ConfigSchema = new Schema({
   }
 });
 
-export default mongoose.models.Config || mongoose.model('Config', ConfigSchema)
+export default mongoose.models.Config || mongoose.model<IConfig>('Config', ConfigSchema)

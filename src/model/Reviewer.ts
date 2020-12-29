@@ -1,4 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+
+export interface IReviewer extends Document {
+  uniqueIdentifier: string;
+  meta: any;
+}
 
 export const ReviewerSchema = new Schema({
   uniqueIdentifier: {
@@ -12,4 +17,4 @@ export const ReviewerSchema = new Schema({
   }
 });
 
-export default mongoose.models.Reviewer || mongoose.model('Reviewer', ReviewerSchema);
+export default mongoose.models.Reviewer || mongoose.model<IReviewer>('Reviewer', ReviewerSchema);
