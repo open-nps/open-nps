@@ -4,6 +4,7 @@ import { GetServerSidePropsContext } from 'next';
 import { Research, Target } from '../../model';
 import { AddThemeOptsDefaults } from '../../util/themeOpts';
 import { ThemeOptions } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 const styles = () => createStyles({
   root: {
@@ -44,7 +45,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export const ThanksPage = ({ classes, templates }: Props) => (
   <div className={classes.root}>
-   <h2>{ templates.ThanksPhrase }</h2>
+    <Typography variant="h2" component="h2">
+      { templates.ThanksPhrase }
+    </Typography>
   </div>
 )
 

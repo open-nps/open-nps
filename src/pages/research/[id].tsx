@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ThemeProvider, createMuiTheme, ThemeOptions, makeStyles } from '@material-ui/core/styles';
+
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+
 import ResearchNotes from '../../components/ResearchNotes';
 import ResearchComment from '../../components/ResearchComment';
 import ResearchSubmit from '../../components/ResearchSubmit';
 
 import { Target, Research } from '../../model';
 import { AddThemeOptsDefaults } from '../../util/themeOpts';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { GetServerSidePropsContext } from 'next';
 
 const useStyles = makeStyles(() => ({
@@ -82,7 +85,9 @@ export const ResearchPage = ({ mui, themeOpts, templates, researchId }: Props) =
     <ThemeProvider theme={createMuiTheme(mui)}>
       <CssBaseline />
       <form className={classes.root} onSubmit={onSubmit}>
-        <h2> { templates.CoreQuestionPhrase } </h2>
+        <Typography variant="h2" component="h2">
+          { templates.CoreQuestionPhrase }
+        </Typography>
         <ResearchNotes themeOpts={themeOpts} setValue={setValueForField('note')} selected={state.note} />
         <ResearchComment value={state.comment} setValue={setValueForField('comment')} label={templates.ResearchCommentLabel} placeholder={templates.ResearchCommentPlaceholder}/>
         <ResearchSubmit themeOpts={themeOpts}>Enviar</ResearchSubmit>

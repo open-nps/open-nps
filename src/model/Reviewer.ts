@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import timestamp from 'mongoose-timestamp';
 
 export interface IReviewer extends Document {
   uniqueIdentifier: string;
@@ -16,5 +17,7 @@ export const ReviewerSchema = new Schema({
     required: true
   }
 });
+
+ReviewerSchema.plugin(timestamp);
 
 export default mongoose.models.Reviewer || mongoose.model<IReviewer>('Reviewer', ReviewerSchema);

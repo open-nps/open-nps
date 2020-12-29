@@ -1,4 +1,6 @@
-import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import timestamp from 'mongoose-timestamp';
+
 import { ITarget } from './Target';
 import { IReviewer } from './Reviewer';
 
@@ -34,6 +36,8 @@ export const ResearchSchema = new Schema({
     type: String
   }
 });
+
+ResearchSchema.plugin(timestamp);
 
 export default mongoose.models.Research || mongoose.model<IResearch>('Research', ResearchSchema);
 

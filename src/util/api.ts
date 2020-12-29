@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
+import { connectMongo } from "./mongo"
 
-export const createApiHandler = (handlers) => (req: NextApiRequest, res: NextApiResponse): NextApiHandler => {
-    return handlers[req.method](req, res);
+export const createApiHandler = (handlers): NextApiHandler => async (req: NextApiRequest, res: NextApiResponse) => {
+  await connectMongo();
+  handlers[req.method](req, res);
 }

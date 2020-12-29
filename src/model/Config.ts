@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import timestamp from 'mongoose-timestamp';
 import { ThemeOptions } from '@material-ui/core';
 
 type KeyTypes = 'mui' | 'theme' | 'templates';
@@ -20,5 +21,7 @@ export const ConfigSchema = new Schema({
     default: {}
   }
 });
+
+ConfigSchema.plugin(timestamp);
 
 export default mongoose.models.Config || mongoose.model<IConfig>('Config', ConfigSchema)
