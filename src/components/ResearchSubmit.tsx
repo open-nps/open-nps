@@ -12,13 +12,17 @@ const Button = withStyles((theme) => ({
   root: {
     marginTop: theme.spacing(3),
     width: '600px',
-  }
+  },
 }))(MUIButton);
 
-export const ResearchSubmit = ({ themeOpts, children }: Props) => (
-  <Button color={themeOpts.ResearchSubmitBtnColor} variant="contained" type="submit">
-    { children }
+export const ResearchSubmit: React.FC<Props> = ({ themeOpts, children }) => (
+  <Button
+    color={themeOpts.ResearchSubmitBtnColor}
+    variant="contained"
+    type="submit"
+  >
+    {children}
   </Button>
-)
+);
 
 export default ResearchSubmit;

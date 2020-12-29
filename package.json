@@ -8,7 +8,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "tsc": "tsc --project tsconfig.json --noEmit",
+    "lint": "eslint './src'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged && lint-staged",
+      "pre-push": "yarn tsc"
+    }
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "yarn lint -- --fix"
+    ]
   },
   "dependencies": {
     "@material-ui/core": "^4.11.2",
@@ -17,17 +30,23 @@
     "mongoose": "^5.11.8",
     "mongoose-timestamp": "^0.6.0",
     "next": "^10.0.4",
-    "next-mui-helper": "^3.0.4",
-    "next-transpile-modules": "^6.0.0",
     "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "styled-components": "^5.2.1",
-    "swr": "^0.3.11"
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@types/mongoose": "^5.10.3",
     "@types/node": "^14.14.16",
     "@types/react": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "typescript": "^4.1.3"
   }
 }

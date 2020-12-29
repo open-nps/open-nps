@@ -3,7 +3,7 @@ import timestamp from 'mongoose-timestamp';
 
 export interface IReviewer extends Document {
   uniqueIdentifier: string;
-  meta: any;
+  meta: AnyObject;
 }
 
 export const ReviewerSchema = new Schema({
@@ -14,10 +14,11 @@ export const ReviewerSchema = new Schema({
   },
   meta: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
 
 ReviewerSchema.plugin(timestamp);
 
-export default mongoose.models.Reviewer || mongoose.model<IReviewer>('Reviewer', ReviewerSchema);
+export default mongoose.models.Reviewer ||
+  mongoose.model<IReviewer>('Reviewer', ReviewerSchema);

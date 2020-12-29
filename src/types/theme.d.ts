@@ -8,7 +8,7 @@ declare type ThemeBorder = {
 
 declare interface ThemeOptionsConfigValues {
   // Theme Config for ResearchNotes
-  ResearchNotesBtnGroupActive: Boolean;
+  ResearchNotesBtnGroupActive: boolean;
   ResearchNotesBtnSize: MUISizes;
   ResearchNotesBtnColor: MUIColors;
 

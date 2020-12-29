@@ -6,7 +6,7 @@ import timestamp from 'mongoose-timestamp';
 export interface ITarget extends Document {
   name: string;
   configs: string[] | IConfig[];
-  meta: any
+  meta: AnyObject;
 }
 
 export const TargetSchema = new Schema({
@@ -19,12 +19,15 @@ export const TargetSchema = new Schema({
     type: Object,
     default: {},
   },
-  configs: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Config'
-  }]
+  configs: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Config',
+    },
+  ],
 });
 
 TargetSchema.plugin(timestamp);
 
-export default mongoose.models.Target || mongoose.model<ITarget>('Target', TargetSchema)
+export default mongoose.models.Target ||
+  mongoose.model<ITarget>('Target', TargetSchema);

@@ -1,11 +1,18 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
 import { connectMongo } from '~/util/mongo';
 
 export default class MyDocument extends Document {
-  render() {
+  render(): React.ReactElement {
     return (
       <Html lang="en">
         <Head />
@@ -18,16 +25,17 @@ export default class MyDocument extends Document {
   }
 }
 
-// `getInitialProps` belongs to `_document` (instead of `_app`),
-// it's compatible with server-side generation (SSG).
-MyDocument.getInitialProps = async (ctx: DocumentContext) => {
+MyDocument.getInitialProps = async (
+  ctx: DocumentContext
+): Promise<DocumentInitialProps> => {
   await connectMongo();
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceComponent: (Component) => (props) => sheets.collect(<Component {...props} />)
+      enhanceComponent: (Component) => (props) =>
+        sheets.collect(<Component {...props} />),
     });
 
   const initialProps = await Document.getInitialProps(ctx);
@@ -35,6 +43,9 @@ MyDocument.getInitialProps = async (ctx: DocumentContext) => {
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      sheets.getStyleElement(),
+    ],
   };
 };

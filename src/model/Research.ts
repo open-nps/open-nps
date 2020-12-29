@@ -9,7 +9,7 @@ export interface IResearch extends Document {
   reviewer?: string | IReviewer;
   concluded?: boolean;
   value?: number;
-  comment?: string
+  comment?: string;
 }
 
 export const ResearchSchema = new Schema({
@@ -30,14 +30,14 @@ export const ResearchSchema = new Schema({
   },
   concluded: {
     type: Boolean,
-    default: false
+    default: false,
   },
   comment: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 ResearchSchema.plugin(timestamp);
 
-export default mongoose.models.Research || mongoose.model<IResearch>('Research', ResearchSchema);
-
+export default mongoose.models.Research ||
+  mongoose.model<IResearch>('Research', ResearchSchema);

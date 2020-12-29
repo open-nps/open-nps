@@ -6,7 +6,7 @@ type KeyTypes = 'mui' | 'theme' | 'templates';
 
 export interface IConfig extends Document {
   key: KeyTypes;
-  values: ThemeOptionsConfigValues | ThemeOptions | TemplatesConfigValues
+  values: ThemeOptionsConfigValues | ThemeOptions | TemplatesConfigValues;
 }
 
 export const ConfigSchema = new Schema({
@@ -18,15 +18,16 @@ export const ConfigSchema = new Schema({
   alias: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   values: {
     type: Object,
     required: true,
-    default: {}
-  }
+    default: {},
+  },
 });
 
 ConfigSchema.plugin(timestamp);
 
-export default mongoose.models.Config || mongoose.model<IConfig>('Config', ConfigSchema)
+export default mongoose.models.Config ||
+  mongoose.model<IConfig>('Config', ConfigSchema);

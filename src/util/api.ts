@@ -1,7 +1,17 @@
-import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
-import { connectMongo } from "./mongo"
+import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
+import { connectMongo } from './mongo';
 
-export const createApiHandler = (handlers): NextApiHandler => async (req: NextApiRequest, res: NextApiResponse) => {
+type Handlers = {
+  GET?: NextApiHandler;
+  POST?: NextApiHandler;
+  PUT?: NextApiHandler;
+  DELETE?: NextApiHandler;
+};
+
+export const createApiHandler = (handlers: Handlers): NextApiHandler => async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   await connectMongo();
   handlers[req.method](req, res);
-}
+};
