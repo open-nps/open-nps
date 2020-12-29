@@ -5,8 +5,12 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { ThemeOptions } from '@material-ui/core/styles';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 
-import { Research, Target } from '~/model';
+import Research from '~/model/Research';
+import Target, { ITarget } from '~/model/Target';
+
 import { AddThemeOptsDefaults } from '~/util/themeOpts';
+import { template } from '~/util/template';
+import { IReviewer } from '~/model/Reviewer';
 
 const styles = () =>
   createStyles({
@@ -26,6 +30,10 @@ interface Props extends WithStyles<typeof styles> {
   themeOpts: ThemeOptionsConfigValues;
   templates: TemplatesConfigValues;
   researchId: string;
+  data: {
+    reviewer: IReviewer;
+    target: ITarget;
+  };
 }
 
 export const getServerSideProps = async (
@@ -53,14 +61,18 @@ export const getServerSideProps = async (
       ...configs,
       themeOpts: AddThemeOptsDefaults(themeOpts),
       researchId,
+      data: {
+        reviewer: (research.reviewer as IReviewer).meta || {},
+        target: target.meta,
+      },
     },
   };
 };
 
-export const ThanksPage: React.FC<Props> = ({ classes, templates }) => (
+export const ThanksPage: React.FC<Props> = ({ classes, templates, data }) => (
   <div className={classes.root}>
     <Typography variant="h2" component="h2">
-      {templates.ThanksPhrase}
+      {template(templates.ThanksPhrase, data)}
     </Typography>
   </div>
 );

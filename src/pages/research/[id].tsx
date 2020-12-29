@@ -15,8 +15,12 @@ import ResearchNotes from '~/components/ResearchNotes';
 import ResearchComment from '~/components/ResearchComment';
 import ResearchSubmit from '~/components/ResearchSubmit';
 
-import { Target, Research } from '~/model';
+import Target, { ITarget } from '~/model/Target';
+import Research, { IResearch } from '~/model/Research';
+import { IConfig } from '~/model/Config';
+import { template } from '~/util/template';
 import { AddThemeOptsDefaults } from '~/util/themeOpts';
+import { IReviewer } from '~/model/Reviewer';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -35,21 +39,26 @@ interface Props {
   themeOpts: ThemeOptionsConfigValues;
   templates: TemplatesConfigValues;
   researchId: string;
+  data: {
+    reviewer: AnyObject;
+    target: AnyObject;
+  };
 }
 
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { connectMongo } = await import('../../util/mongo');
-  const researchId = ctx.params.id;
+  const researchId = ctx.params.id as string;
 
   await connectMongo();
 
-  const research = await Research.findOne({
+  const research: IResearch = await Research.findOne({
     _id: researchId,
     concluded: false,
-  });
-  const target = await Target.findById(research.target)
+  }).populate('reviewer', { _id: 0 });
+
+  const target: ITarget = await Target.findById(research.target)
     .populate('configs', { _id: 0 })
     .lean();
 
@@ -57,14 +66,20 @@ export const getServerSideProps = async (
     return { notFound: true };
   }
 
-  const { themeOpts, ...configs } = target.configs.reduce(
+  const configs: AnyObject = (target.configs as IConfig[]).reduce(
     (a, c) => ({ ...a, [c.key]: c.values }),
     {}
   );
+
   return {
     props: {
-      ...configs,
-      themeOpts: AddThemeOptsDefaults(themeOpts),
+      mui: configs.mui,
+      templates: configs.templates,
+      themeOpts: AddThemeOptsDefaults(configs.themeOpts),
+      data: {
+        reviewer: (research.reviewer as IReviewer).meta || {},
+        target: target.meta,
+      },
       researchId,
     },
   };
@@ -74,6 +89,7 @@ export const ResearchPage: React.FC<Props> = ({
   mui,
   themeOpts,
   templates,
+  data,
   researchId,
 }) => {
   const [state, setState] = useState({ note: null, comment: '' });
@@ -111,12 +127,13 @@ export const ResearchPage: React.FC<Props> = ({
     }
   }, []);
 
+  console.log(templates.CoreQuestionPhrase, data);
   return (
     <ThemeProvider theme={createMuiTheme(mui)}>
       <CssBaseline />
       <form className={classes.root} onSubmit={onSubmit}>
         <Typography variant="h2" component="h2">
-          {templates.CoreQuestionPhrase}
+          {template(templates.CoreQuestionPhrase, data)}
         </Typography>
         <ResearchNotes
           themeOpts={themeOpts}
