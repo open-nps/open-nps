@@ -1,7 +1,7 @@
-import { createApiHandler } from "../../../util/api"
 import { NextApiRequest, NextApiResponse } from "next"
-import { Target } from "../../../model"
-import { ITarget } from "../../../model/Target";
+
+import Target, { ITarget } from "~/model/Target";
+import { createApiHandler } from "~/util/api"
 
 export const findTargets = async (req: NextApiRequest, res: NextApiResponse) => {
   const targets = await Target.find().lean();

@@ -1,7 +1,7 @@
-import { createApiHandler } from "../../../util/api"
-import { NextApiRequest, NextApiResponse } from "next"
-import { Target } from "../../../model"
-import { ITarget } from "../../../model/Target";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import Target, { ITarget } from "~/model/Target";
+import { createApiHandler } from "~/util/api";
 
 const addOrPop = (listOne: string[], listTwo: string[]) => {
   const diff = (arr1, arr2) => arr1.filter(a1 => !arr2.some(a2 => a1 === a2));

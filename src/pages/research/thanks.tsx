@@ -1,10 +1,12 @@
 import React from 'react';
-import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
-import { GetServerSidePropsContext } from 'next';
-import { Research, Target } from '../../model';
-import { AddThemeOptsDefaults } from '../../util/themeOpts';
-import { ThemeOptions } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+
+import { GetServerSidePropsContext } from 'next';
+import { ThemeOptions } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
+
+import { Research, Target } from '~/model';
+import { AddThemeOptsDefaults } from '~/util/themeOpts';
 
 const styles = () => createStyles({
   root: {

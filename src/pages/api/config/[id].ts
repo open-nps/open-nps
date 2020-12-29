@@ -1,8 +1,8 @@
 import merge from 'lodash.merge';
 import { NextApiRequest, NextApiResponse } from "next"
-import { Config } from "../../../model"
-import { IConfig } from "../../../model/Config";
-import { createApiHandler } from "../../../util/api"
+
+import Config, { IConfig } from "~/model/Config";
+import { createApiHandler } from "~/util/api"
 
 export const findConfig = async (req: NextApiRequest, res: NextApiResponse) => {
   const config = await Config.findOne({ _id: req.query.id }).lean();

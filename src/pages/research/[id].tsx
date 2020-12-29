@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next';
 import { ThemeProvider, createMuiTheme, ThemeOptions, makeStyles } from '@material-ui/core/styles';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 
-import ResearchNotes from '../../components/ResearchNotes';
-import ResearchComment from '../../components/ResearchComment';
-import ResearchSubmit from '../../components/ResearchSubmit';
+import ResearchNotes from '~/components/ResearchNotes';
+import ResearchComment from '~/components/ResearchComment';
+import ResearchSubmit from '~/components/ResearchSubmit';
 
-import { Target, Research } from '../../model';
-import { AddThemeOptsDefaults } from '../../util/themeOpts';
-import { GetServerSidePropsContext } from 'next';
+import { Target, Research } from '~/model';
+import { AddThemeOptsDefaults } from '~/util/themeOpts';
 
 const useStyles = makeStyles(() => ({
   root: {

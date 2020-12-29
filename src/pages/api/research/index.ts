@@ -1,18 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { createApiHandler } from "../../../util/api"
-import { Reviewer, Research, Target } from '../../../model';
-import { IReviewer } from "../../../model/Reviewer";
+import { createApiHandler } from "~/util/api"
+import Research, { IResearch } from "~/model/Research";
+import Target, { ITarget } from "~/model/Target";
+import Reviewer, { IReviewer } from "~/model/Reviewer";
 
 export const createNewResearch = async (req: NextApiRequest, res: NextApiResponse) => {
   const { reviewerId, reviewerMeta, targetName } = req.body;
-  const target = await Target.findOne({ name: targetName });
+  const target: ITarget = await Target.findOne({ name: targetName });
   const savedReviewer: IReviewer = await Reviewer.findOne({ uniqueIdentifier: reviewerId });
   const reviewer = !savedReviewer
     ? await (new Reviewer({ uniqueIdentifier: reviewerId, meta: reviewerMeta })).save()
     : await savedReviewer.updateOne({ meta: { ...savedReviewer.meta, ...reviewerMeta } })
 
-  const research = new Research({
+  const research: IResearch = new Research({
     target: target._id,
     reviewer: reviewer._id
   });

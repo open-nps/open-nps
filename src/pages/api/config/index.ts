@@ -1,7 +1,7 @@
-import { createApiHandler } from "../../../util/api"
 import { NextApiRequest, NextApiResponse } from "next"
-import { Config } from "../../../model"
-import { IConfig } from "../../../model/Config";
+
+import Config, { IConfig } from "~/model/Config";
+import { createApiHandler } from "~/util/api"
 
 export const findConfigs = async (req: NextApiRequest, res: NextApiResponse) => {
   const configs = await Config.find().lean();
