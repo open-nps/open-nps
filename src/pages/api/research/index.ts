@@ -1,3 +1,4 @@
+import merge from 'lodash.merge';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiHandler } from '~/util/api';
@@ -14,21 +15,26 @@ export const createNewResearch = async (
   const savedReviewer: IReviewer = await Reviewer.findOne({
     uniqueIdentifier: reviewerId,
   });
+  const finalReviewerMeta = !savedReviewer
+    ? reviewerMeta
+    : merge(savedReviewer.meta, reviewerMeta);
   const reviewer = !savedReviewer
-    ? await new Reviewer({
+    ? await Reviewer.create({
         uniqueIdentifier: reviewerId,
-        meta: reviewerMeta,
-      }).save()
-    : await savedReviewer.updateOne({
-        meta: { ...savedReviewer.meta, ...reviewerMeta },
-      });
+        meta: finalReviewerMeta,
+      })
+    : await savedReviewer
+        .updateOne({
+          meta: finalReviewerMeta,
+        })
+        .then(() => merge(savedReviewer, { meta: finalReviewerMeta }));
 
-  const research: IResearch = new Research({
+  const research: IResearch = await Research.create({
     target: target._id,
     reviewer: reviewer._id,
   });
 
-  return res.json(await research.save());
+  return res.json(research);
 };
 
 export default createApiHandler({

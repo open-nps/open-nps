@@ -1,12 +1,12 @@
 jest.mock('../../../../src/model/Config');
 
 import merge from 'lodash.merge';
+import { NextApiResponse, NextApiRequest } from 'next';
+
+import Config from '~/model/Config';
 
 import { findConfigs, createConfig } from '~/pages/api/config';
 import { findConfig, updateConfig } from '~/pages/api/config/[id]';
-
-import Config from '~/model/Config';
-import { NextApiResponse, NextApiRequest } from 'next';
 
 describe('/pages/api/config', () => {
   let req = {} as NextApiRequest;

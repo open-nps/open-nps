@@ -4,4 +4,5 @@ module.exports = {
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/src/$1',
   },
+  coverageReporters: ['lcov', 'text', 'clover', 'html'],
 };
