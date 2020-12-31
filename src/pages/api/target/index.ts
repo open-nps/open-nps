@@ -7,7 +7,7 @@ export const findTargets = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const targets = await Target.find().lean();
+  const targets = await Target.find();
   return res.json({ targets });
 };
 
@@ -15,10 +15,8 @@ export const createTarget = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const target: ITarget = new Target(req.body);
-  const savedTg = await target.save();
-
-  return res.json(savedTg);
+  const target: ITarget = await Target.create(req.body);
+  return res.json(target);
 };
 
 export default createApiHandler({

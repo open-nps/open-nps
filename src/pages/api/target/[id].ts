@@ -16,7 +16,7 @@ export const findTarget = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const target = await Target.findOne({ _id: req.query.id }).lean();
+  const target = await Target.findOne({ _id: req.query.id });
   return res.json(target);
 };
 
@@ -31,15 +31,13 @@ export const updateTarget = async (
   }
 
   const target: ITarget = await Target.findOne({ _id: req.query.id });
-  const newTarget = await target.updateOne(
-    {
-      meta: { ...target.meta, ...meta },
-      configs: addOrPop(target.configs as string[], configs),
-    },
-    { new: true }
-  );
+  const newData = {
+    meta: { ...target.meta, ...meta },
+    configs: addOrPop(target.configs as string[], configs),
+  };
 
-  return res.json(newTarget);
+  await target.updateOne(newData);
+  return res.json({ name: target.name, ...newData });
 };
 
 export default createApiHandler({
