@@ -8,7 +8,7 @@ export const findConfig = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const config = await Config.findOne({ _id: req.query.id }).lean();
+  const config = await Config.findOne({ _id: req.query.id });
   return res.json(config);
 };
 
