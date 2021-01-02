@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 
+/* istanbul ignore next */
 const styles = () =>
   createStyles({
     buttonDiv: {
@@ -15,7 +16,7 @@ const styles = () =>
 
 interface Props extends WithStyles<typeof styles> {
   themeOpts: ThemeOptionsConfigValues;
-  selected: number;
+  selected?: number;
   setValue: SimpleFn<string, void>;
 }
 
@@ -44,13 +45,14 @@ export const ResearchNotes: React.FC<Props> = ({
   selected,
   setValue,
   classes,
-}) =>
-  !themeOpts.ResearchNotesBtnGroupActive ? (
-    <div className={classes.buttonDiv}>
-      {renderNotes(themeOpts, selected, setValue)}
-    </div>
-  ) : (
-    <ButtonGroup>{renderNotes(themeOpts, selected, setValue)}</ButtonGroup>
-  );
+}) => {
+  const noteElementsArr = renderNotes(themeOpts, selected, setValue);
+
+  if (!themeOpts.ResearchNotesBtnGroupActive) {
+    return <div className={classes.buttonDiv}>{noteElementsArr}</div>;
+  }
+
+  return <ButtonGroup>{noteElementsArr}</ButtonGroup>;
+};
 
 export default withStyles(styles)(ResearchNotes);

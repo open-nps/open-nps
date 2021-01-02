@@ -1,14 +1,18 @@
 import React from 'react';
 
 import MUITextField from '@material-ui/core/TextField';
-import { withStyles } from '@material-ui/styles';
+import { withStyles, createStyles } from '@material-ui/styles';
 
-const TextField = withStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(3),
-    width: '600px',
-  },
-}))(MUITextField);
+/* istanbul ignore next */
+const styles = (theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(3),
+      width: '600px',
+    },
+  });
+
+const TextField = withStyles(styles)(MUITextField);
 
 interface Props {
   value: string;
