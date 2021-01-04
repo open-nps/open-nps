@@ -1,14 +1,17 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react"
   ],
   "rules": {
-    "indent": ["error", 2],
+    "prettier/prettier": "error",
+    "indent": 0,
     "comma-dangle": ["error", "always-multiline"]
   }
 }
