@@ -5,12 +5,18 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 
 /* istanbul ignore next */
-const styles = () =>
+const styles = (theme) =>
   createStyles({
     buttonDiv: {
+      maxWidth: '700px',
       width: '100%',
       display: 'flex',
       justifyContent: 'space-around',
+      flexWrap: 'wrap',
+
+      '& > *': {
+        marginBottom: theme.spacing(1),
+      },
     },
   });
 

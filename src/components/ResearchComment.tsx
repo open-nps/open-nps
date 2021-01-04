@@ -7,8 +7,9 @@ import { withStyles, createStyles } from '@material-ui/styles';
 const styles = (theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3),
-      width: '600px',
+      marginTop: theme.spacing(2),
+      maxWidth: '600px',
+      width: '100%',
     },
   });
 

@@ -18,16 +18,23 @@ import { IConfig } from '~/model/Config';
 import { IReviewer } from '~/model/Reviewer';
 import { AddThemeOptsDefaults } from '~/util/themeOpts';
 
-const styles = () =>
+const styles = (theme) =>
   createStyles({
     root: {
-      maxWidth: '800px',
+      height: '100vh',
+      maxWidth: '750px',
       margin: '0 auto',
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      padding: theme.spacing(2),
+
+      '& > h4': {
+        marginBottom: theme.spacing(3),
+        textAlign: 'justify',
+      },
     },
   });
 

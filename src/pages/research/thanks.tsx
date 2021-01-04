@@ -24,7 +24,7 @@ export const ThanksPage: React.FC<LayoutProps> = ({
   data,
 }) => (
   <div className={layoutClasses.root}>
-    <Typography variant="h2" component="h2">
+    <Typography variant="h4" component="h4">
       {template(templates.ThanksPhrase, data)}
     </Typography>
   </div>

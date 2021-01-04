@@ -13,7 +13,8 @@ const styles = (theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
-      width: '600px',
+      maxWidth: '600px',
+      width: '100%',
     },
   });
 
