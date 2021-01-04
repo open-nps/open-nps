@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/src/pages/research/thanks should render properly 1`] = `
+<div
+  className="root"
+>
+  <WithStyles(ForwardRef(Typography))
+    component="h2"
+    variant="h2"
+  >
+    Foo Bar
+  </WithStyles(ForwardRef(Typography))>
+</div>
+`;

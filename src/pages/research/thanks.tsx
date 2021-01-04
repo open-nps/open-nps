@@ -10,9 +10,11 @@ import {
 } from '~/layouts/NPSResearchLayout';
 import { template } from '~/util/template';
 
+export const ctxResearchIdGetter = (ctx: GetServerSidePropsContext): string =>
+  ctx.query.researchId as string;
+
 export const getServerSideProps = getServerSidePropsFn({
-  ctxResearchIdGetter: (ctx: GetServerSidePropsContext) =>
-    ctx.query.researchId as string,
+  ctxResearchIdGetter,
   researchExtraData: { concluded: true },
 });
 

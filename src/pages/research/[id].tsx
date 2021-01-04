@@ -15,9 +15,11 @@ import {
   getServerSidePropsFn,
 } from '~/layouts/NPSResearchLayout';
 
+export const ctxResearchIdGetter = (ctx: GetServerSidePropsContext): string =>
+  ctx.params.id as string;
+
 export const getServerSideProps = getServerSidePropsFn({
-  ctxResearchIdGetter: (ctx: GetServerSidePropsContext) =>
-    ctx.params.id as string,
+  ctxResearchIdGetter,
   researchExtraData: { concluded: false },
 });
 
@@ -50,6 +52,12 @@ export const createSubmit = (data: SubmitData, router: NextRouter) => async (
   }
 };
 
+export const setValueForFieldInState = (
+  state: AnyObject,
+  setState: SimpleFn<AnyObject, void>
+) => (field: string) => (value: string): void =>
+  setState({ ...state, [field]: value });
+
 export const ResearchPage: React.FC<LayoutProps> = ({
   themeOpts,
   templates,
@@ -60,8 +68,7 @@ export const ResearchPage: React.FC<LayoutProps> = ({
   const [state, setState] = useState({ note: null, comment: '' });
   const router = useRouter();
   const onSubmit = createSubmit({ researchId, ...state }, router);
-  const setValueForField = (field) => (value) =>
-    setState({ ...state, [field]: value });
+  const setValueForField = setValueForFieldInState(state, setState);
 
   return (
     <form className={layoutClasses.root} onSubmit={onSubmit}>
