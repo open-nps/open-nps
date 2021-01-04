@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import { connectMongo } from './mongo';
+import { Model, Document } from 'mongoose';
 
 type Handlers = {
   GET?: NextApiHandler;
@@ -12,6 +12,8 @@ export const createApiHandler = (handlers: Handlers): NextApiHandler => async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  const { connectMongo } = await import('./mongo');
+
   await connectMongo();
   return handlers[req.method](req, res);
 };

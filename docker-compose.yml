@@ -1,5 +1,17 @@
-version: "3.2"
+version: '3.2'
 services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/app/src
+      - ./src/.next:/app/.next
+    command: yarn dev
+    environment:
+      MONGO_URL: mongodb://mongo:27017/open-nps
   mongo:
     image: mongo
     restart: always

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 import { ThemeOptions } from '@material-ui/core';
 
@@ -29,5 +29,5 @@ export const ConfigSchema = new Schema({
 
 ConfigSchema.plugin(timestamp);
 
-export default mongoose.models.Config ||
-  mongoose.model<IConfig>('Config', ConfigSchema);
+export default (mongoose.models.Config ||
+  mongoose.model<IConfig>('Config', ConfigSchema)) as Model<IConfig>;

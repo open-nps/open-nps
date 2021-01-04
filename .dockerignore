@@ -1,0 +1,15 @@
+node_modules
+.next
+coverage
+tests
+.editorconfig
+.eslint
+.prettier
+docker-compose
+Dockerfile
+jest.config.js
+LICENSE
+README.md
+package-lock.json
+yarn.lock
+setupEnzyme.ts

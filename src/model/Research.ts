@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
 import { ITarget } from './Target';
@@ -39,5 +39,5 @@ export const ResearchSchema = new Schema({
 
 ResearchSchema.plugin(timestamp);
 
-export default mongoose.models.Research ||
-  mongoose.model<IResearch>('Research', ResearchSchema);
+export default (mongoose.models.Research ||
+  mongoose.model<IResearch>('Research', ResearchSchema)) as Model<IResearch>;

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import { IConfig } from './Config';
 
 import timestamp from 'mongoose-timestamp';
@@ -29,5 +29,5 @@ export const TargetSchema = new Schema({
 
 TargetSchema.plugin(timestamp);
 
-export default mongoose.models.Target ||
-  mongoose.model<ITarget>('Target', TargetSchema);
+export default (mongoose.models.Target ||
+  mongoose.model<ITarget>('Target', TargetSchema)) as Model<ITarget>;

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
 export interface IReviewer extends Document {
@@ -20,5 +20,5 @@ export const ReviewerSchema = new Schema({
 
 ReviewerSchema.plugin(timestamp);
 
-export default mongoose.models.Reviewer ||
-  mongoose.model<IReviewer>('Reviewer', ReviewerSchema);
+export default (mongoose.models.Reviewer ||
+  mongoose.model<IReviewer>('Reviewer', ReviewerSchema)) as Model<IReviewer>;
