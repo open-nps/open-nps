@@ -5,8 +5,8 @@ exports[`/src/pages/research/thanks should render properly 1`] = `
   className="root"
 >
   <WithStyles(ForwardRef(Typography))
-    component="h2"
-    variant="h2"
+    component="h4"
+    variant="h4"
   >
     Foo Bar
   </WithStyles(ForwardRef(Typography))>

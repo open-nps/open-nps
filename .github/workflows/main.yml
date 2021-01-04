@@ -15,6 +15,6 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Unit Tests
-        run: yarn jest test/unit --coverage
+        run: yarn jest tests/unit --coverage
       - name: E2E Tests
         run: echo "TODO"

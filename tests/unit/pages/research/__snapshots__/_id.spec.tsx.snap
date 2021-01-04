@@ -6,8 +6,8 @@ exports[`/src/pages/research/[id] Page Component (ResearchPage) should render pr
   onSubmit={[Function]}
 >
   <WithStyles(ForwardRef(Typography))
-    component="h2"
-    variant="h2"
+    component="h4"
+    variant="h4"
   >
     Foo Bar
   </WithStyles(ForwardRef(Typography))>
