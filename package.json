@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "tsc": "tsc --project tsconfig.json --noEmit",
-    "lint": "eslint './src' './tests'"
+    "lint": "eslint './src' './tests'",
+    "jest": "node --expose-gc ./node_modules/.bin/jest --config=jest.config.js --logHeapUsage"
   },
   "husky": {
     "hooks": {

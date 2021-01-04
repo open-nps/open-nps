@@ -6,4 +6,9 @@ module.exports = {
   },
   coverageReporters: ['lcov', 'text', 'clover', 'html'],
   setupFilesAfterEnv: ['<rootDir>/setupEnzyme.ts'],
+  globals: {
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.jest.json',
+    },
+  },
 };
