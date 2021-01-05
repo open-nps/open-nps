@@ -1,0 +1,26 @@
+{
+  "name": "opennps",
+  "meta": {
+    "name": "Open NPS"
+  },
+  "configs": [
+    {
+      "key": "mui",
+      "alias": "cypress-mui",
+      "values": {}
+    },
+    {
+      "key": "templates",
+      "alias": "cypress-templates",
+      "values": {
+        "CoreQuestionPhrase": "{{ reviewer.name }} about {{ target.name }}",
+        "ThanksPhrase": "Thanks {{ reviewer.name }}"
+      }
+    },
+    {
+      "key": "themeOpts",
+      "alias": "cypress-themeOpts",
+      "values": {}
+    }
+  ]
+}

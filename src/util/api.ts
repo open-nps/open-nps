@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import { Model, Document } from 'mongoose';
 
 type Handlers = {
   GET?: NextApiHandler;

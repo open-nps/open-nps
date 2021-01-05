@@ -6,6 +6,7 @@ exports[`/src/pages/research/thanks should render properly 1`] = `
 >
   <WithStyles(ForwardRef(Typography))
     component="h4"
+    data-cy="ThanksPageTypography"
     variant="h4"
   >
     Foo Bar

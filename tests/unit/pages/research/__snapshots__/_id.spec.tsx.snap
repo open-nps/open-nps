@@ -7,6 +7,7 @@ exports[`/src/pages/research/[id] Page Component (ResearchPage) should render pr
 >
   <WithStyles(ForwardRef(Typography))
     component="h4"
+    data-cy="ResearchPageTypography"
     variant="h4"
   >
     Foo Bar

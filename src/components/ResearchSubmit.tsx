@@ -25,6 +25,7 @@ export const ResearchSubmit: React.FC<Props> = ({ themeOpts, children }) => (
     color={themeOpts.ResearchSubmitBtnColor}
     variant="contained"
     type="submit"
+    data-cy="ResearchSubmit"
   >
     {children}
   </Button>

@@ -72,7 +72,7 @@ export const ResearchPage: React.FC<LayoutProps> = ({
 
   return (
     <form className={layoutClasses.root} onSubmit={onSubmit}>
-      <Typography variant="h4" component="h4">
+      <Typography data-cy="ResearchPageTypography" variant="h4" component="h4">
         {template(templates.CoreQuestionPhrase, data)}
       </Typography>
       <ResearchNotes

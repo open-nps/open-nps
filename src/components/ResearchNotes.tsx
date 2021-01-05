@@ -40,6 +40,7 @@ const renderNotes = (
         size={themeOpts.ResearchNotesBtnSize}
         variant={note === selected ? 'contained' : 'outlined'}
         color={themeOpts.ResearchNotesBtnColor}
+        data-cy="ResearchNoteBtn"
       >
         {note}
       </Button>

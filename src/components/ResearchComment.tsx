@@ -39,6 +39,7 @@ export const ResearchComment: React.FC<Props> = ({
     placeholder={placeholder}
     rows={3}
     rowsMax={6}
+    data-cy="ResearchComment"
   />
 );
 

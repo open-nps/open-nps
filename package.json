@@ -43,6 +43,8 @@
     "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
+    "cypress": "^6.2.1",
+    "cypress-visual-regression": "^1.5.6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "eslint": "^7.8.1",

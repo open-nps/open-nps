@@ -13,5 +13,14 @@
     "prettier/prettier": "error",
     "indent": 0,
     "comma-dangle": ["error", "always-multiline"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["tests/e2e/**/*.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/no-var-requires": 0
+      }
+    }
+  ]
 }
