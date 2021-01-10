@@ -25,6 +25,9 @@ export const TargetSchema = new Schema({
       ref: 'Config',
     },
   ],
+  deletedAt: {
+    type: Date,
+  },
 });
 
 TargetSchema.plugin(timestamp);

@@ -33,7 +33,19 @@ export const updateConfig = async (
   return res.json(merge(config, updates));
 };
 
+export const deleteConfig = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> => {
+  const updates = { deletedAt: new Date() };
+  const config: IConfig = await Config.findOne({ _id: req.query.id });
+
+  await config.updateOne(updates);
+  return res.json(updates);
+};
+
 export default createApiHandler({
   GET: findConfig,
   PUT: updateConfig,
+  DELETE: deleteConfig,
 });

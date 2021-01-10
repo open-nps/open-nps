@@ -5,20 +5,27 @@ import { NextApiResponse, NextApiRequest } from 'next';
 import Target from '~/model/Target';
 
 import { findTargets, createTarget } from '~/pages/api/target';
-import { findTarget, updateTarget } from '~/pages/api/target/[id]';
+import {
+  findTarget,
+  updateTarget,
+  deleteTarget,
+} from '~/pages/api/target/[id]';
+
+import { advanceTo, clear } from 'jest-date-mock';
 
 describe('/pages/api/target', () => {
   let req = {} as NextApiRequest;
   const res = {} as NextApiResponse;
 
   beforeEach(() => {
-    req = {} as NextApiRequest;
+    req = { query: {} } as NextApiRequest;
     res.json = jest.fn();
     res.status = jest.fn().mockReturnValue(res);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
+    clear();
   });
 
   describe('index', () => {
@@ -110,6 +117,24 @@ describe('/pages/api/target', () => {
       expect(res.json).toHaveBeenCalledWith({
         message: 'Invalid field to change: <name>',
       });
+    });
+
+    it('should exec deleteTarget properly', async () => {
+      const deletedAt = new Date();
+      const fakeTarget = { values: { y: 2 }, updateOne: jest.fn() };
+
+      advanceTo(deletedAt);
+
+      req.query = { id: 'foo' };
+
+      (Target.findOne as jest.Mock).mockResolvedValue(fakeTarget);
+      await deleteTarget(req, res);
+
+      expect(Target.findOne).toHaveBeenCalledTimes(1);
+      expect(Target.findOne).toHaveBeenCalledWith({ _id: req.query.id });
+      expect(fakeTarget.updateOne).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith({ deletedAt });
     });
   });
 });

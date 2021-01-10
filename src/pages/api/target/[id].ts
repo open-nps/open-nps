@@ -40,7 +40,19 @@ export const updateTarget = async (
   return res.json({ name: target.name, ...newData });
 };
 
+export const deleteTarget = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> => {
+  const updates = { deletedAt: new Date() };
+  const target: ITarget = await Target.findOne({ _id: req.query.id });
+
+  await target.updateOne(updates);
+  return res.json(updates);
+};
+
 export default createApiHandler({
   GET: findTarget,
   PUT: updateTarget,
+  DELETE: deleteTarget,
 });

@@ -1,25 +1,34 @@
 jest.mock('../../../../src/model/Config');
+jest.mock('uuid');
 
 import merge from 'lodash.merge';
 import { NextApiResponse, NextApiRequest } from 'next';
+import { v4 as uuid } from 'uuid';
 
 import Config from '~/model/Config';
 
 import { findConfigs, createConfig } from '~/pages/api/config';
-import { findConfig, updateConfig } from '~/pages/api/config/[id]';
+import {
+  findConfig,
+  updateConfig,
+  deleteConfig,
+} from '~/pages/api/config/[id]';
+
+import { advanceTo, clear } from 'jest-date-mock';
 
 describe('/pages/api/config', () => {
   let req = {} as NextApiRequest;
   const res = {} as NextApiResponse;
 
   beforeEach(() => {
-    req = {} as NextApiRequest;
+    req = { query: {} } as NextApiRequest;
     res.json = jest.fn();
     res.status = jest.fn().mockReturnValue(res);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
+    clear;
   });
 
   describe('index', () => {
@@ -38,6 +47,27 @@ describe('/pages/api/config', () => {
       const fakeId = '123';
       const fakeConfig = { _id: fakeId, ...req.body };
 
+      (Config.create as jest.Mock).mockResolvedValue(fakeConfig);
+
+      await createConfig(req, res);
+
+      expect(Config.create).toHaveBeenCalledTimes(1);
+      expect(Config.create).toHaveBeenCalledWith(req.body);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith(fakeConfig);
+    });
+
+    it('createConfig with default alias', async () => {
+      req.body = { key: 'mui', values: { a: 1 } };
+      const fakeUUID = 'foobar';
+      const fakeId = '123';
+      const fakeConfig = {
+        _id: fakeId,
+        ...req.body,
+        alias: `${req.body.key}-${fakeUUID}`,
+      };
+
+      (uuid as jest.Mock).mockReturnValue(fakeUUID);
       (Config.create as jest.Mock).mockResolvedValue(fakeConfig);
 
       await createConfig(req, res);
@@ -104,6 +134,23 @@ describe('/pages/api/config', () => {
       expect(res.json).toHaveBeenCalledWith({
         message: 'Invalid field to change: <key>',
       });
+    });
+
+    it('should exec deleteConfig properly', async () => {
+      const deletedAt = new Date();
+      const fakeTarget = { values: { y: 2 }, updateOne: jest.fn() };
+
+      advanceTo(deletedAt);
+      req.query = { id: 'foo' };
+
+      (Config.findOne as jest.Mock).mockResolvedValue(fakeTarget);
+      await deleteConfig(req, res);
+
+      expect(Config.findOne).toHaveBeenCalledTimes(1);
+      expect(Config.findOne).toHaveBeenCalledWith({ _id: req.query.id });
+      expect(fakeTarget.updateOne).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith({ deletedAt });
     });
   });
 });

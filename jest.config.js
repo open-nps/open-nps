@@ -5,7 +5,7 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/src/$1',
   },
   coverageReporters: ['lcov', 'text', 'clover', 'html'],
-  setupFilesAfterEnv: ['<rootDir>/setupEnzyme.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setupEnzyme.ts', 'jest-date-mock'],
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.jest.json',

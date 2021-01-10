@@ -1,13 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { MongooseQueryParser } from 'mongoose-query-parser';
 
 import Target, { ITarget } from '~/model/Target';
 import { createApiHandler } from '~/util/api';
+
+const parser = new MongooseQueryParser();
 
 export const findTargets = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const targets = await Target.find();
+  const { filter, ...opts } = parser.parse(req.query);
+  const targets = await Target.find(filter, opts);
   return res.json({ targets });
 };
 

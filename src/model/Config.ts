@@ -2,7 +2,8 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 import { ThemeOptions } from '@material-ui/core';
 
-type KeyTypes = 'mui' | 'theme' | 'templates';
+export const keyTypes = ['mui', 'theme', 'templates'] as const;
+type KeyTypes = typeof keyTypes[number];
 
 export interface IConfig extends Document {
   key: KeyTypes;
@@ -24,6 +25,9 @@ export const ConfigSchema = new Schema({
     type: Object,
     required: true,
     default: {},
+  },
+  deletedAt: {
+    type: Date,
   },
 });
 
