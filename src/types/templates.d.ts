@@ -1,6 +1,7 @@
 declare interface TemplatesConfigValues {
   CoreQuestionPhrase: string;
-  ResearchCommentLabel: string;
-  ResearchCommentPlaceholder: string;
+  SurveyCommentLabel?: string;
+  SurveyCommentPlaceholder?: string;
   ThanksPhrase: string;
+  SendButtonMessage?: string;
 }

@@ -1,0 +1,4 @@
+{
+  "name": { "type": "String" },
+  "bithDate": { "type": "Date" }
+}

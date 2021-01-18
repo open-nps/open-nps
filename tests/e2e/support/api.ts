@@ -30,15 +30,14 @@ Cypress.Commands.add('createSetupByApi', (fixtureTarget: FixtureTarget) => {
 });
 
 Cypress.Commands.add(
-  'createResearchByApi',
+  'createSurveyByApi',
   (target: FixtureTarget, reviewer: FixtureReviewer) => {
     return cy
       .request({
-        url: '/api/research',
+        url: '/api/survey',
         method: 'POST',
         body: {
-          reviewerId: reviewer.uniqueIdentifier,
-          reviewerMeta: reviewer.meta,
+          reviewer: reviewer,
           targetName: target.name,
         },
       })

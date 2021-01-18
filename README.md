@@ -1,10 +1,10 @@
 # OpenNPS
 
-Open NPS is a open source project to create and collect NPS researchs. The project includes:
+Open NPS is a open source project to create and collect NPS surveys. The project includes:
 
 - API
-  - Register Research
-  - Conclude Research
+  - Register Survey
+  - Conclude Survey
   - CRUD for Targets
   - CRUD for Configs
 - Visual

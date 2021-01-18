@@ -2,12 +2,12 @@ import React from 'react';
 
 import { shallow } from 'enzyme';
 
-import { ResearchSubmit } from '~/components/ResearchSubmit';
+import { SurveySubmit } from '~/components/SurveySubmit';
 
-describe('/src/components/ResearchNotes', () => {
+describe('/src/components/SurveyNotes', () => {
   const baseProps = {
     themeOpts: {
-      ResearchSubmitBtnColor: 'primary',
+      SurveySubmitBtnColor: 'primary',
     } as ThemeOptionsConfigValues,
     children: 'FooBar',
   };
@@ -17,12 +17,9 @@ describe('/src/components/ResearchNotes', () => {
   });
 
   it('should render properly', () => {
-    const wrap = shallow(<ResearchSubmit {...baseProps} />);
+    const wrap = shallow(<SurveySubmit {...baseProps} />);
 
-    expect(wrap).toHaveProp(
-      'color',
-      baseProps.themeOpts.ResearchSubmitBtnColor
-    );
+    expect(wrap).toHaveProp('color', baseProps.themeOpts.SurveySubmitBtnColor);
     expect(wrap).toHaveProp('variant', 'contained');
     expect(wrap).toHaveProp('type', 'submit');
     expect(wrap).toHaveText(baseProps.children);

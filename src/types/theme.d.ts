@@ -7,16 +7,25 @@ declare type ThemeBorder = {
 };
 
 declare interface ThemeOptionsConfigValues {
-  // Theme Config for ResearchNotes
-  ResearchNotesBtnGroupActive: boolean;
-  ResearchNotesBtnSize: MUISizes;
-  ResearchNotesBtnColor: MUIColors;
+  // Theme Config for SurveyNotes
+  SurveyNotesBtnGroupActive: boolean;
+  SurveyNotesBtnSize: MUISizes;
+  SurveyNotesBtnColor: MUIColors;
 
-  // Theme Config For ResearchComment
-  ResearchCommentSize: MUISizes;
+  // Theme Config For SurveyComment
+  SurveyCommentSize: MUISizes;
 
-  // Theme Config for ResearchSubmitButton
-  ResearchSubmitBtnSize: MUISizes;
-  ResearchSubmitBtnVariant: MUIVariants;
-  ResearchSubmitBtnColor: MUIColors;
+  // Theme Config for SurveySubmitButton
+  SurveySubmitBtnSize: MUISizes;
+  SurveySubmitBtnVariant: MUIVariants;
+  SurveySubmitBtnColor: MUIColors;
+
+  // SurveyPage
+  SurveyBoxBorderSize: string;
+  SurveyBoxBorderRadius: string;
+  SurveyTopBrandImage: {
+    url: string;
+    alt?: string;
+    width?: string;
+  };
 }

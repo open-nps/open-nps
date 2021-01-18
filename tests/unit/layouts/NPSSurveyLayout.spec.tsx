@@ -14,24 +14,33 @@ import {
   withLayout,
   getServerSidePropsFn,
   LayoutProps,
-} from '~/layouts/NPSResearchLayout';
-import { Target, Research } from '~/model';
+} from '~/layouts/NPSSurveyLayout';
+import { Target, Survey } from '~/model';
 import { AddThemeOptsDefaults } from '~/util/themeOpts';
 
-describe('/src/layouts/NPSResearchLayout', () => {
+describe('/src/layouts/NPSSurveyLayout', () => {
   let handle;
-  const researchExtraData = { concluded: false };
+  const getOverrideConfigs = jest.fn();
+  const surveyExtraData = { concluded: false };
   const fakeCtxId = 'foo';
   const fakeCtx = ({ foo: 'bar' } as unknown) as GetServerSidePropsContext;
   const fakeMuiValue = { a: 1 };
-  const fakeTemplateValue = { b: 1 };
+  const fakeTemplateValue = {
+    CoreQuestionPhrase: 'a',
+    ThanksPhrase: 'b',
+    SendButtonMessage: 'c',
+  };
   const fakeConfigs = [
     { key: 'mui', values: fakeMuiValue },
     { key: 'templates', values: fakeTemplateValue },
   ];
   const fakeTargetId = 'fizz';
-  const fakeReviewer = { meta: { x: 1 } };
-  const fakeResearch = { target: fakeTargetId, reviewer: fakeReviewer };
+  const fakeReviewer = { id: '1', name: 'bar' };
+  const fakeSurvey = {
+    target: fakeTargetId,
+    reviewer: fakeReviewer,
+    getOverrideConfigs,
+  };
   const fakeTarget = {
     meta: { c: 1 },
     configs: fakeConfigs,
@@ -46,23 +55,12 @@ describe('/src/layouts/NPSResearchLayout', () => {
     return populate;
   };
 
-  type baseAssertsParams = {
-    researchPopulate?: jest.Mock;
-    targetPopulate?: jest.Mock;
-  };
-
-  const baseAsserts = ({
-    researchPopulate,
-    targetPopulate,
-  }: baseAssertsParams) => {
-    if (researchPopulate) {
-      expect(researchPopulate).toHaveBeenCalledTimes(1);
-      expect(Research.findOne).toHaveBeenCalledTimes(1);
-      expect(Research.findOne).toHaveBeenCalledWith({
-        _id: fakeCtxId,
-        ...researchExtraData,
-      });
-    }
+  const baseAsserts = (targetPopulate?: jest.Mock) => {
+    expect(Survey.findOne).toHaveBeenCalledTimes(1);
+    expect(Survey.findOne).toHaveBeenCalledWith({
+      _id: fakeCtxId,
+      ...surveyExtraData,
+    });
 
     if (targetPopulate) {
       expect(Target.findById).toHaveBeenCalledTimes(1);
@@ -73,8 +71,8 @@ describe('/src/layouts/NPSResearchLayout', () => {
 
   beforeEach(() => {
     handle = getServerSidePropsFn({
-      ctxResearchIdGetter: jest.fn().mockReturnValue(fakeCtxId),
-      researchExtraData,
+      ctxSurveyIdGetter: jest.fn().mockReturnValue(fakeCtxId),
+      surveyExtraData,
     });
   });
 
@@ -83,10 +81,8 @@ describe('/src/layouts/NPSResearchLayout', () => {
   });
 
   it('should return a handle from getServerSidePropsFn and its return props', async () => {
-    const researchPopulate = simulatePopulate(
-      Research.findOne as jest.Mock,
-      fakeResearch
-    );
+    fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
+    (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
     const targetPopulate = simulatePopulate(
       Target.findById as jest.Mock,
       fakeTarget
@@ -94,44 +90,66 @@ describe('/src/layouts/NPSResearchLayout', () => {
 
     const res: AnyObject = await handle(fakeCtx);
 
-    baseAsserts({ researchPopulate, targetPopulate });
+    baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('notFound');
     expect(res.props).toHaveProperty('mui', fakeMuiValue);
     expect(res.props).toHaveProperty('templates', fakeTemplateValue);
     expect(res.props).toHaveProperty('themeOpts', AddThemeOptsDefaults({}));
-    expect(res.props).toHaveProperty('researchId', fakeCtxId);
-    expect(res.props.data).toHaveProperty('reviewer', fakeReviewer.meta);
+    expect(res.props).toHaveProperty('surveyId', fakeCtxId);
+    expect(res.props.data).toHaveProperty('reviewer', fakeReviewer);
     expect(res.props.data).toHaveProperty('target', fakeTarget.meta);
   });
 
-  it('should return a handle from getServerSidePropsFn and its return notFound for research', async () => {
-    const researchPopulate = simulatePopulate(
-      Research.findOne as jest.Mock,
-      null
+  it('should return a handle from getServerSidePropsFn and its return props overrides by tags', async () => {
+    const fakeMuiNewConfig = { a: 2 };
+    fakeSurvey.getOverrideConfigs.mockResolvedValue([
+      [{ values: fakeMuiNewConfig, key: 'mui', alias: 'foobar' }],
+    ]);
+    (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
+    const targetPopulate = simulatePopulate(
+      Target.findById as jest.Mock,
+      fakeTarget
     );
+
+    const res: AnyObject = await handle(fakeCtx);
+
+    baseAsserts(targetPopulate);
+    expect(res).not.toHaveProperty('notFound');
+    expect(res.props).toHaveProperty('mui', fakeMuiNewConfig);
+    expect(res.props).toHaveProperty('templates', fakeTemplateValue);
+    expect(res.props).toHaveProperty('themeOpts', AddThemeOptsDefaults({}));
+    expect(res.props).toHaveProperty('surveyId', fakeCtxId);
+    expect(res.props.data).toHaveProperty('reviewer', fakeReviewer);
+    expect(res.props.data).toHaveProperty('target', fakeTarget.meta);
+  });
+
+  it('should return a handle from getServerSidePropsFn and its return notFound for survey', async () => {
+    fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
+    (Survey.findOne as jest.Mock).mockResolvedValue(null);
     simulatePopulate(Target.findById as jest.Mock, fakeTarget);
 
     const res: AnyObject = await handle(fakeCtx);
 
-    baseAsserts({ researchPopulate });
+    baseAsserts();
     expect(res).not.toHaveProperty('props');
     expect(res).toHaveProperty('notFound', true);
   });
 
   it('should return a handle from getServerSidePropsFn and its return notFound for target', async () => {
-    simulatePopulate(Research.findOne as jest.Mock, fakeResearch);
+    fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
+    (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
     const targetPopulate = simulatePopulate(Target.findById as jest.Mock, null);
 
     const res: AnyObject = await handle(fakeCtx);
 
-    baseAsserts({ targetPopulate });
+    baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('props');
     expect(res).toHaveProperty('notFound', true);
   });
 
   it('should withLayout return a valid React.FC', () => {
     const otherProps = ({ b: 2, c: 3 } as unknown) as LayoutProps;
-    const props = { mui: { a: 1 }, ...otherProps };
+    const props = { mui: { a: 1 }, themeOpts: {}, ...otherProps };
     const MyComponent = () => <div>Test</div>;
     const WithLayout = withLayout(MyComponent);
     const createMuiThemeRes = { a: 1 };

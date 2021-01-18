@@ -9,8 +9,8 @@ interface FixtureTarget {
 }
 
 interface FixtureReviewer {
-  uniqueIdentifier: string;
-  meta: any;
+  id: string;
+  name: string;
 }
 
 interface FixtureReviewerWithID extends FixtureReviewer {
@@ -21,9 +21,9 @@ interface FixtureTargetWithID extends FixtureTarget {
   _id: string;
 }
 
-interface TestResearch {
+interface TestSurvey {
   _id: string;
-  reviewer: FixtureReviewerWithID;
+  reviewer: FixtureReviewer;
   target: FixtureTargetWithID;
 }
 
@@ -40,9 +40,9 @@ declare namespace Cypress {
     ): Chainable<JQuery<HTMLElement>>;
     all(args: Chainable<any>[]): Chainable<any>;
     createSetupByApi(target: FixtureTarget): Chainable<FixtureTargetWithID>;
-    createResearchByApi(
+    createSurveyByApi(
       target: FixtureTarget,
       reviewer: FixtureReviewer
-    ): Chainable<TestResearch>;
+    ): Chainable<TestSurvey>;
   }
 }

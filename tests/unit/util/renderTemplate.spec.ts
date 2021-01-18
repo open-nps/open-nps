@@ -1,6 +1,6 @@
-import { template } from '~/util/template';
+import { renderTemplate } from '~/util/renderTemplate';
 
-describe('/util/template', () => {
+describe('/util/renderTemplate', () => {
   const createStrToTemplate = (val) => `${val} foo bar`;
 
   it('should render first level object', () => {
@@ -8,7 +8,7 @@ describe('/util/template', () => {
     const tpl = createStrToTemplate('{{fizz}}');
     const result = createStrToTemplate(data.fizz);
 
-    expect(template(tpl, data)).toBe(result);
+    expect(renderTemplate(tpl, data)).toBe(result);
   });
 
   it('should render first level object with space', () => {
@@ -16,7 +16,7 @@ describe('/util/template', () => {
     const tpl = createStrToTemplate('{{ fizz }}');
     const result = createStrToTemplate(data.fizz);
 
-    expect(template(tpl, data)).toBe(result);
+    expect(renderTemplate(tpl, data)).toBe(result);
   });
 
   it('should render deep level object', () => {
@@ -24,6 +24,6 @@ describe('/util/template', () => {
     const tpl = createStrToTemplate('{{fizz.fuzz}}');
     const result = createStrToTemplate(data.fizz.fuzz);
 
-    expect(template(tpl, data)).toBe(result);
+    expect(renderTemplate(tpl, data)).toBe(result);
   });
 });

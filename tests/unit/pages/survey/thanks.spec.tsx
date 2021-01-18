@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { ThanksPage, ctxResearchIdGetter } from '~/pages/research/thanks';
-import { LayoutProps } from '~/layouts/NPSResearchLayout';
+import { ThanksPage, ctxSurveyIdGetter } from '~/pages/survey/thanks';
+import { LayoutProps } from '~/layouts/NPSSurveyLayout';
 import { shallow } from 'enzyme';
 import { GetServerSidePropsContext } from 'next';
 
-describe('/src/pages/research/thanks', () => {
+describe('/src/pages/survey/thanks', () => {
   it('should render properly', () => {
     const props = ({
       templates: {
         ThanksPhrase: 'Foo Bar',
       },
-      researchId: 'fake',
+      surveyId: 'fake',
       themeOpts: {
         a: 1,
       },
@@ -27,10 +27,10 @@ describe('/src/pages/research/thanks', () => {
     expect(wrap).toMatchSnapshot();
   });
 
-  it('ctxResearchIdGetter', () => {
+  it('ctxSurveyIdGetter', () => {
     const ctx = ({
-      query: { researchId: 'foo' },
+      query: { surveyId: 'foo' },
     } as unknown) as GetServerSidePropsContext;
-    expect(ctxResearchIdGetter(ctx)).toBe(ctx.query.researchId);
+    expect(ctxSurveyIdGetter(ctx)).toBe(ctx.query.surveyId);
   });
 });

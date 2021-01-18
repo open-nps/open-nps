@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import ResearchComment from '~/components/ResearchComment';
+import SurveyComment from '~/components/SurveyComment';
 
-describe('/src/components/ResearchComment', () => {
+describe('/src/components/SurveyComment', () => {
   const baseProps = {
     label: 'foo',
     value: '',
@@ -28,21 +28,21 @@ describe('/src/components/ResearchComment', () => {
   });
 
   it('should render properly without placeholder', () => {
-    const wrap = shallow(<ResearchComment {...baseProps} />);
+    const wrap = shallow(<SurveyComment {...baseProps} />);
     basicAsserts(wrap);
   });
 
   it('should render properly with placeholder', () => {
     const placeholder = 'foobar';
     const wrap = shallow(
-      <ResearchComment {...baseProps} placeholder={placeholder} />
+      <SurveyComment {...baseProps} placeholder={placeholder} />
     );
     basicAsserts(wrap, { placeholder });
   });
 
   it('should render call set value', () => {
     const fakeValue = 'fizz';
-    const wrap = shallow(<ResearchComment {...baseProps} />);
+    const wrap = shallow(<SurveyComment {...baseProps} />);
     basicAsserts(wrap);
 
     wrap.simulate('change', { target: { value: fakeValue } });

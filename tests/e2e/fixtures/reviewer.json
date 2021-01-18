@@ -1,6 +1,4 @@
 {
-  "uniqueIdentifier": "1",
-  "meta": {
-    "name": "Foo Bar"
-  }
+  "id": "1",
+  "name": "Foo Bar"
 }

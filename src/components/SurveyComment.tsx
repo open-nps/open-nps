@@ -21,7 +21,7 @@ interface Props {
   placeholder?: string;
   setValue: SimpleFn<string, void>;
 }
-export const ResearchComment: React.FC<Props> = ({
+export const SurveyComment: React.FC<Props> = ({
   value,
   setValue,
   label,
@@ -39,8 +39,8 @@ export const ResearchComment: React.FC<Props> = ({
     placeholder={placeholder}
     rows={3}
     rowsMax={6}
-    data-cy="ResearchComment"
+    data-cy="SurveyComment"
   />
 );
 
-export default ResearchComment;
+export default SurveyComment;

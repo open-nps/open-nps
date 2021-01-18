@@ -3,15 +3,15 @@ import React from 'react';
 import {
   createSubmit,
   setValueForFieldInState,
-  ResearchPage,
-  ctxResearchIdGetter,
-} from '~/pages/research/[id]';
+  SurveyPage,
+  ctxSurveyIdGetter,
+} from '~/pages/survey/[id]';
 import { NextRouter } from 'next/router';
 import { shallow } from 'enzyme';
-import { LayoutProps } from '~/layouts/NPSResearchLayout';
+import { LayoutProps } from '~/layouts/NPSSurveyLayout';
 import { GetServerSidePropsContext } from 'next';
 
-describe('/src/pages/research/[id]', () => {
+describe('/src/pages/survey/[id]', () => {
   const fetch = global.fetch;
 
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('/src/pages/research/[id]', () => {
 
   describe('createSubmit', () => {
     const router = ({ push: jest.fn() } as unknown) as NextRouter;
-    const fakeData = { researchId: 'foo', note: '5', comment: 'bar' };
+    const fakeData = { surveyId: 'foo', note: '5', comment: 'bar' };
     const fakeEvent = ({
       preventDefault: jest.fn(),
     } as unknown) as React.FormEvent<HTMLFormElement>;
@@ -50,7 +50,7 @@ describe('/src/pages/research/[id]', () => {
       expect(response.json).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledWith(
-        `${global.window.location.origin}/api/research/conclude`,
+        `${global.window.location.origin}/api/survey/conclude`,
         {
           method: 'PUT',
           headers: {
@@ -71,7 +71,7 @@ describe('/src/pages/research/[id]', () => {
       baseAsserts(response);
       expect(router.push).toHaveBeenCalledTimes(1);
       expect(router.push).toHaveBeenCalledWith(
-        `/research/thanks?researchId=${fakeData.researchId}`
+        `/survey/thanks?surveyId=${fakeData.surveyId}`
       );
     });
 
@@ -84,7 +84,7 @@ describe('/src/pages/research/[id]', () => {
       baseAsserts(response);
       expect(router.push).not.toHaveBeenCalledTimes(1);
       expect(router.push).not.toHaveBeenCalledWith(
-        `/research/thanks?researchId=${fakeData.researchId}`
+        `/survey/thanks?surveyId=${fakeData.surveyId}`
       );
     });
   });
@@ -104,17 +104,20 @@ describe('/src/pages/research/[id]', () => {
     });
   });
 
-  describe('Page Component (ResearchPage)', () => {
+  describe('Page Component (SurveyPage)', () => {
     it('should render properly', () => {
       const props = ({
         templates: {
           CoreQuestionPhrase: 'Foo Bar',
-          ResearchCommentLabel: 'Fizz',
-          ResearchCommentPlaceholder: 'Fuzz',
+          SurveyCommentLabel: 'Fizz',
+          SurveyCommentPlaceholder: 'Fuzz',
         },
-        researchId: 'fake',
+        surveyId: 'fake',
         themeOpts: {
-          a: 1,
+          SurveyTopBrandImage: {
+            url: 'a',
+            alt: 'b',
+          },
         },
         data: {
           b: 1,
@@ -124,15 +127,15 @@ describe('/src/pages/research/[id]', () => {
         },
       } as unknown) as LayoutProps;
 
-      const wrap = shallow(<ResearchPage {...props} />);
+      const wrap = shallow(<SurveyPage {...props} />);
       expect(wrap).toMatchSnapshot();
     });
 
-    it('ctxResearchIdGetter', () => {
+    it('ctxSurveyIdGetter', () => {
       const ctx = ({
         params: { id: 'foo' },
       } as unknown) as GetServerSidePropsContext;
-      expect(ctxResearchIdGetter(ctx)).toBe(ctx.params.id);
+      expect(ctxSurveyIdGetter(ctx)).toBe(ctx.params.id);
     });
   });
 });

@@ -37,17 +37,17 @@ const renderNotes = (
       <Button
         key={`nps-${val}`}
         onClick={() => setValue(note)}
-        size={themeOpts.ResearchNotesBtnSize}
+        size={themeOpts.SurveyNotesBtnSize}
         variant={note === selected ? 'contained' : 'outlined'}
-        color={themeOpts.ResearchNotesBtnColor}
-        data-cy="ResearchNoteBtn"
+        color={themeOpts.SurveyNotesBtnColor}
+        data-cy="SurveyNoteBtn"
       >
         {note}
       </Button>
     );
   });
 
-export const ResearchNotes: React.FC<Props> = ({
+export const SurveyNotes: React.FC<Props> = ({
   themeOpts,
   selected,
   setValue,
@@ -55,11 +55,11 @@ export const ResearchNotes: React.FC<Props> = ({
 }) => {
   const noteElementsArr = renderNotes(themeOpts, selected, setValue);
 
-  if (!themeOpts.ResearchNotesBtnGroupActive) {
+  if (!themeOpts.SurveyNotesBtnGroupActive) {
     return <div className={classes.buttonDiv}>{noteElementsArr}</div>;
   }
 
   return <ButtonGroup>{noteElementsArr}</ButtonGroup>;
 };
 
-export default withStyles(styles)(ResearchNotes);
+export default withStyles(styles)(SurveyNotes);

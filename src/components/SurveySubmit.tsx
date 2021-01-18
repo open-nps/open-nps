@@ -20,15 +20,15 @@ const styles = (theme) =>
 
 const Button = withStyles(styles)(MUIButton);
 
-export const ResearchSubmit: React.FC<Props> = ({ themeOpts, children }) => (
+export const SurveySubmit: React.FC<Props> = ({ themeOpts, children }) => (
   <Button
-    color={themeOpts.ResearchSubmitBtnColor}
+    color={themeOpts.SurveySubmitBtnColor}
     variant="contained"
     type="submit"
-    data-cy="ResearchSubmit"
+    data-cy="SurveySubmit"
   >
     {children}
   </Button>
 );
 
-export default ResearchSubmit;
+export default SurveySubmit;

@@ -4,12 +4,12 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import { shallow } from 'enzyme';
 
-import { ResearchNotes } from '~/components/ResearchNotes';
+import { SurveyNotes } from '~/components/SurveyNotes';
 
-describe('/src/components/ResearchNotes', () => {
+describe('/src/components/SurveyNotes', () => {
   const baseProps = {
     themeOpts: {
-      ResearchNotesBtnGroupActive: false,
+      SurveyNotesBtnGroupActive: false,
     } as ThemeOptionsConfigValues,
     classes: { buttonDiv: 'buttonDiv' },
     setValue: jest.fn(),
@@ -44,28 +44,28 @@ describe('/src/components/ResearchNotes', () => {
   });
 
   it('should render properly', () => {
-    const wrap = shallow(<ResearchNotes {...baseProps} />);
+    const wrap = shallow(<SurveyNotes {...baseProps} />);
     basicAsserts(wrap);
   });
 
   it('should render properly with selected', () => {
     const selected = 3;
-    const wrap = shallow(<ResearchNotes {...baseProps} selected={selected} />);
+    const wrap = shallow(<SurveyNotes {...baseProps} selected={selected} />);
     basicAsserts(wrap, { selected });
   });
 
   it('should render properly with ButtonGroup', () => {
     const props = {
       ...baseProps,
-      themeOpts: { ...baseProps.themeOpts, ResearchNotesBtnGroupActive: true },
+      themeOpts: { ...baseProps.themeOpts, SurveyNotesBtnGroupActive: true },
     };
-    const wrap = shallow(<ResearchNotes {...props} />);
+    const wrap = shallow(<SurveyNotes {...props} />);
     basicAsserts(wrap, { isBtnGroup: true });
   });
 
   it('should setValue correctly', () => {
     const selected = 2;
-    const wrap = shallow(<ResearchNotes {...baseProps} />);
+    const wrap = shallow(<SurveyNotes {...baseProps} />);
     basicAsserts(wrap);
 
     wrap

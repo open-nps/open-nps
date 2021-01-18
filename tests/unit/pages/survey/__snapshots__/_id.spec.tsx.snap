@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render properly 1`] = `
+<form
+  className="root"
+  onSubmit={[Function]}
+>
+  <div
+    style={
+      Object {
+        "maxWidth": "auto",
+      }
+    }
+  >
+    <img
+      alt="b"
+      src="a"
+    />
+  </div>
+  <WithStyles(ForwardRef(Typography))
+    component="h4"
+    data-cy="SurveyPageTypography"
+    variant="h4"
+  >
+    Foo Bar
+  </WithStyles(ForwardRef(Typography))>
+  <WithStyles(SurveyNotes)
+    selected={null}
+    setValue={[Function]}
+    themeOpts={
+      Object {
+        "SurveyTopBrandImage": Object {
+          "alt": "b",
+          "url": "a",
+        },
+      }
+    }
+  />
+  <SurveyComment
+    label="Fizz"
+    placeholder="Fuzz"
+    setValue={[Function]}
+    value=""
+  />
+  <SurveySubmit
+    themeOpts={
+      Object {
+        "SurveyTopBrandImage": Object {
+          "alt": "b",
+          "url": "a",
+        },
+      }
+    }
+  />
+</form>
+`;

@@ -1,8 +1,8 @@
-describe('Research', () => {
-  const createResearch = (target) =>
+describe('Survey', () => {
+  const createSurvey = (target) =>
     cy
       .fixture('reviewer')
-      .then((reviewer) => cy.createResearchByApi(target, reviewer));
+      .then((reviewer) => cy.createSurveyByApi(target, reviewer));
 
   it('alo', () => {
     const fakeComment = 'Foo Bar Alow';
@@ -10,29 +10,29 @@ describe('Research', () => {
     const clickInRandomButton = () => {
       const idx = Math.floor(10 * Math.random());
 
-      return cy.getBySel('ResearchNoteBtn').eq(idx).click();
+      return cy.getBySel('SurveyNoteBtn').eq(idx).click();
     };
 
     const typeComment = (comment: string) => () =>
-      cy.getBySel('ResearchComment').type(comment);
+      cy.getBySel('SurveyComment').type(comment);
 
-    const checkResearchPageTypography = (value: string) => () =>
-      cy.getBySel('ResearchPageTypography').should('have.text', value);
+    const checkSurveyPageTypography = (value: string) => () =>
+      cy.getBySel('SurveyPageTypography').should('have.text', value);
 
     const checkThanksPageTypography = (value: string) => () =>
       cy.getBySel('ThanksPageTypography').should('have.text', value);
 
-    const clickInSubmit = () => cy.getBySel('ResearchSubmit').click();
+    const clickInSubmit = () => cy.getBySel('SurveySubmit').click();
 
     cy.fixture('target')
       .then(cy.createSetupByApi)
-      .then(createResearch)
-      .then((research: TestResearch) =>
+      .then(createSurvey)
+      .then((survey: TestSurvey) =>
         cy
-          .visit(`/research/${research._id}`)
+          .visit(`/survey/${survey._id}`)
           .then(
-            checkResearchPageTypography(
-              `${research.reviewer.meta.name} about ${research.target.meta.name}`
+            checkSurveyPageTypography(
+              `${survey.reviewer.name} about ${survey.target.meta.name}`
             )
           )
           .then(clickInRandomButton)
@@ -45,9 +45,7 @@ describe('Research', () => {
           )
           .then(clickInSubmit)
           .wait(1000)
-          .then(
-            checkThanksPageTypography(`Thanks ${research.reviewer.meta.name}`)
-          )
+          .then(checkThanksPageTypography(`Thanks ${survey.reviewer.name}`))
       );
   });
 });

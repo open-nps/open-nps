@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
+import get from 'lodash.get';
 
 import { useRouter, NextRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 
-import ResearchNotes from '~/components/ResearchNotes';
-import ResearchComment from '~/components/ResearchComment';
-import ResearchSubmit from '~/components/ResearchSubmit';
+import SurveyNotes from '~/components/SurveyNotes';
+import SurveyComment from '~/components/SurveyComment';
+import SurveySubmit from '~/components/SurveySubmit';
 
-import { template } from '~/util/template';
+import { renderTemplate } from '~/util/renderTemplate';
 import {
   withLayout,
   LayoutProps,
   getServerSidePropsFn,
-} from '~/layouts/NPSResearchLayout';
+} from '~/layouts/NPSSurveyLayout';
 
-export const ctxResearchIdGetter = (ctx: GetServerSidePropsContext): string =>
+export const ctxSurveyIdGetter = (ctx: GetServerSidePropsContext): string =>
   ctx.params.id as string;
 
 export const getServerSideProps = getServerSidePropsFn({
-  ctxResearchIdGetter,
-  researchExtraData: { concluded: false },
+  ctxSurveyIdGetter,
+  surveyExtraData: { concluded: false },
 });
 
 interface SubmitData {
-  researchId: string;
+  surveyId: string;
   note: string;
   comment: string;
 }
@@ -34,7 +35,7 @@ export const createSubmit = (data: SubmitData, router: NextRouter) => async (
 ): Promise<void> => {
   e.preventDefault();
   const response = await fetch(
-    `${window.location.origin}/api/research/conclude`,
+    `${window.location.origin}/api/survey/conclude`,
     {
       method: 'PUT',
       headers: {
@@ -48,7 +49,7 @@ export const createSubmit = (data: SubmitData, router: NextRouter) => async (
   const { ok } = await response.json();
 
   if (ok) {
-    router.push(`/research/thanks?researchId=${data.researchId}`);
+    router.push(`/survey/thanks?surveyId=${data.surveyId}`);
   }
 };
 
@@ -58,37 +59,52 @@ export const setValueForFieldInState = (
 ) => (field: string) => (value: string): void =>
   setState({ ...state, [field]: value });
 
-export const ResearchPage: React.FC<LayoutProps> = ({
+export const SurveyPage: React.FC<LayoutProps> = ({
   themeOpts,
   templates,
   data,
-  researchId,
+  surveyId,
   layoutClasses,
 }): React.ReactElement => {
   const [state, setState] = useState({ note: null, comment: '' });
   const router = useRouter();
-  const onSubmit = createSubmit({ researchId, ...state }, router);
+  const onSubmit = createSubmit({ surveyId, ...state }, router);
   const setValueForField = setValueForFieldInState(state, setState);
 
   return (
     <form className={layoutClasses.root} onSubmit={onSubmit}>
-      <Typography data-cy="ResearchPageTypography" variant="h4" component="h4">
-        {template(templates.CoreQuestionPhrase, data)}
+      {themeOpts.SurveyTopBrandImage && (
+        <div
+          style={{
+            maxWidth: get(themeOpts, 'SurveyTopBrandImage.width', 'auto'),
+          }}
+          className={layoutClasses.brand}
+        >
+          <img
+            alt={themeOpts.SurveyTopBrandImage.alt}
+            src={themeOpts.SurveyTopBrandImage.url}
+          />
+        </div>
+      )}
+      <Typography data-cy="SurveyPageTypography" variant="h4" component="h4">
+        {renderTemplate(templates.CoreQuestionPhrase, data)}
       </Typography>
-      <ResearchNotes
+      <SurveyNotes
         themeOpts={themeOpts}
         setValue={setValueForField('note')}
         selected={state.note}
       />
-      <ResearchComment
+      <SurveyComment
         value={state.comment}
         setValue={setValueForField('comment')}
-        label={templates.ResearchCommentLabel}
-        placeholder={templates.ResearchCommentPlaceholder}
+        label={templates.SurveyCommentLabel}
+        placeholder={templates.SurveyCommentPlaceholder}
       />
-      <ResearchSubmit themeOpts={themeOpts}>Enviar</ResearchSubmit>
+      <SurveySubmit themeOpts={themeOpts}>
+        {templates.SendButtonMessage}
+      </SurveySubmit>
     </form>
   );
 };
 
-export default withLayout(ResearchPage);
+export default withLayout(SurveyPage);

@@ -1,9 +1,11 @@
 export const DEFAULT_VALUES = {
-  ResearchNotesBtnSize: 'medium',
-  ResearchSubmitBtnSize: 'medium',
-  ResearchSubmitBtnVariant: 'contained',
-  ResearchNotesBtnColor: 'primary',
-  ResearchSubmitBtnColor: 'primary',
+  SurveyNotesBtnSize: 'medium',
+  SurveySubmitBtnSize: 'medium',
+  SurveySubmitBtnVariant: 'contained',
+  SurveyNotesBtnColor: 'primary',
+  SurveySubmitBtnColor: 'primary',
+  SurveyBoxBorderSize: '0px',
+  SurveyBoxBorderRadius: '0px',
 };
 
 export const AddThemeOptsDefaults = (

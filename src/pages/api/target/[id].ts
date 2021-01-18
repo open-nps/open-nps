@@ -2,15 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import Target, { ITarget } from '~/model/Target';
 import { createApiHandler } from '~/util/api';
-
-const addOrPop = (listOne: string[], listTwo: string[]): string[] => {
-  const diff = (arr1, arr2) =>
-    arr1.filter((a1) => !arr2.some((a2) => a1 === a2));
-  const [larger, smaller] =
-    listOne.length >= listTwo.length ? [listOne, listTwo] : [listTwo, listOne];
-
-  return diff(larger, smaller).concat(diff(smaller, larger));
-};
+import { addOrPop } from '~/util/addOrPop';
 
 export const findTarget = async (
   req: NextApiRequest,

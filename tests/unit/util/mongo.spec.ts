@@ -15,6 +15,7 @@ describe('/util/mongo', () => {
     expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     });
   });
 });

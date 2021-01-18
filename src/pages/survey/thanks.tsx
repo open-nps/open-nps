@@ -7,15 +7,15 @@ import {
   withLayout,
   getServerSidePropsFn,
   LayoutProps,
-} from '~/layouts/NPSResearchLayout';
-import { template } from '~/util/template';
+} from '~/layouts/NPSSurveyLayout';
+import { renderTemplate } from '~/util/renderTemplate';
 
-export const ctxResearchIdGetter = (ctx: GetServerSidePropsContext): string =>
-  ctx.query.researchId as string;
+export const ctxSurveyIdGetter = (ctx: GetServerSidePropsContext): string =>
+  ctx.query.surveyId as string;
 
 export const getServerSideProps = getServerSidePropsFn({
-  ctxResearchIdGetter,
-  researchExtraData: { concluded: true },
+  ctxSurveyIdGetter,
+  surveyExtraData: { concluded: true },
 });
 
 export const ThanksPage: React.FC<LayoutProps> = ({
@@ -25,7 +25,7 @@ export const ThanksPage: React.FC<LayoutProps> = ({
 }) => (
   <div className={layoutClasses.root}>
     <Typography data-cy="ThanksPageTypography" variant="h4" component="h4">
-      {template(templates.ThanksPhrase, data)}
+      {renderTemplate(templates.ThanksPhrase, data)}
     </Typography>
   </div>
 );
