@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import Config, { IConfig } from '~/model/Config';
 import { createApiHandler } from '~/util/api';
+import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 
 export const findConfig = async (
   req: NextApiRequest,
@@ -45,7 +46,13 @@ export const deleteConfig = async (
 };
 
 export default createApiHandler({
-  GET: findConfig,
-  PUT: updateConfig,
-  DELETE: deleteConfig,
+  GET: authMiddleware([RoleEnum.SETUP_READ], findConfig),
+  PUT: authMiddleware(
+    [RoleEnum.SETUP_READ, RoleEnum.SETUP_WRITE],
+    updateConfig
+  ),
+  DELETE: authMiddleware(
+    [RoleEnum.SETUP_READ, RoleEnum.SETUP_WRITE],
+    deleteConfig
+  ),
 });

@@ -4,7 +4,7 @@ describe('Survey', () => {
       .fixture('reviewer')
       .then((reviewer) => cy.createSurveyByApi(target, reviewer));
 
-  it('alo', () => {
+  it('should exec ', () => {
     const fakeComment = 'Foo Bar Alow';
 
     const clickInRandomButton = () => {
@@ -24,7 +24,8 @@ describe('Survey', () => {
 
     const clickInSubmit = () => cy.getBySel('SurveySubmit').click();
 
-    cy.fixture('target')
+    cy.loginAdmin()
+      .then(() => cy.fixture('target'))
       .then(cy.createSetupByApi)
       .then(createSurvey)
       .then((survey: TestSurvey) =>

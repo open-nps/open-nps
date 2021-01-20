@@ -1,15 +1,15 @@
 {
   "name": "open-nps",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "index.js",
   "repository": "git@github.com:guidiego/open-nps.git",
   "author": "Guilherme Diego <guilherme.albino.francisco@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
+    "script": "ts-node --project tsconfig.scripts.json ./scripts",
+    "dev": "yarn script initUser && next dev",
     "build": "next build",
-    "start": "next start",
-    "tsc": "tsc --project tsconfig.json --noEmit",
+    "start": "yarn script initUser && next start",
     "lint": "eslint './src' './tests'",
     "jest": "node --expose-gc ./node_modules/.bin/jest --config=jest.config.js --logHeapUsage"
   },
@@ -35,6 +35,8 @@
     "next": "^10.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

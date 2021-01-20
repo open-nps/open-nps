@@ -44,5 +44,6 @@ declare namespace Cypress {
       target: FixtureTarget,
       reviewer: FixtureReviewer
     ): Chainable<TestSurvey>;
+    loginAdmin(): Chainable<{ hash: string }>;
   }
 }

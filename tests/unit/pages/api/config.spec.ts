@@ -28,7 +28,7 @@ describe('/pages/api/config', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-    clear;
+    clear();
   });
 
   describe('index', () => {

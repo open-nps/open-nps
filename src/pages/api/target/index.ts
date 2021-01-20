@@ -3,6 +3,7 @@ import { MongooseQueryParser } from 'mongoose-query-parser';
 
 import Target, { ITarget } from '~/model/Target';
 import { createApiHandler } from '~/util/api';
+import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 
 const parser = new MongooseQueryParser();
 
@@ -24,6 +25,6 @@ export const createTarget = async (
 };
 
 export default createApiHandler({
-  GET: findTargets,
-  POST: createTarget,
+  GET: authMiddleware([RoleEnum.SETUP_READ], findTargets),
+  POST: authMiddleware([RoleEnum.SETUP_WRITE], createTarget),
 });

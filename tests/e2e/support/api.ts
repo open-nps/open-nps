@@ -1,9 +1,27 @@
+let hash = '';
+
+Cypress.Commands.add('loginAdmin', () =>
+  cy
+    .request({
+      url: '/api/token',
+      method: 'POST',
+      body: { email: 'admin@open.nps', password: 'opennps123' },
+    })
+    .then(({ body }) => {
+      hash = body.hash;
+      return body;
+    })
+);
+
 Cypress.Commands.add('createSetupByApi', (fixtureTarget: FixtureTarget) => {
   const createTarget = (target) =>
     cy.request({
       url: '/api/target',
       method: 'POST',
       body: target,
+      headers: {
+        authorization: hash,
+      },
     });
 
   const createConfig = (config) =>
@@ -11,6 +29,9 @@ Cypress.Commands.add('createSetupByApi', (fixtureTarget: FixtureTarget) => {
       url: '/api/config',
       method: 'POST',
       body: config,
+      headers: {
+        authorization: hash,
+      },
     });
 
   const createConfigsGetIds = (configs) => cy.all(configs.map(createConfig));
@@ -20,6 +41,9 @@ Cypress.Commands.add('createSetupByApi', (fixtureTarget: FixtureTarget) => {
       .request({
         url: '/api/config',
         method: 'GET',
+        headers: {
+          authorization: hash,
+        },
       })
       .then(({ body }) => body);
 
@@ -39,6 +63,9 @@ Cypress.Commands.add(
         body: {
           reviewer: reviewer,
           targetName: target.name,
+        },
+        headers: {
+          authorization: hash,
         },
       })
       .then(({ body }) => ({ ...body, target, reviewer }));

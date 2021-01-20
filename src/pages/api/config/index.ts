@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import Config, { IConfig } from '~/model/Config';
 import { createApiHandler } from '~/util/api';
+import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 
 const parser = new MongooseQueryParser();
 
@@ -31,6 +32,6 @@ export const createConfig = async (
 };
 
 export default createApiHandler({
-  GET: findConfigs,
-  POST: createConfig,
+  GET: authMiddleware([RoleEnum.SETUP_READ], findConfigs),
+  POST: authMiddleware([RoleEnum.SETUP_WRITE], createConfig),
 });

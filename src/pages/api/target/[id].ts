@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Target, { ITarget } from '~/model/Target';
 import { createApiHandler } from '~/util/api';
 import { addOrPop } from '~/util/addOrPop';
+import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 
 export const findTarget = async (
   req: NextApiRequest,
@@ -44,7 +45,10 @@ export const deleteTarget = async (
 };
 
 export default createApiHandler({
-  GET: findTarget,
-  PUT: updateTarget,
-  DELETE: deleteTarget,
+  GET: authMiddleware([RoleEnum.SETUP_READ], findTarget),
+  PUT: authMiddleware([RoleEnum.SETUP_WRITE], updateTarget),
+  DELETE: authMiddleware(
+    [RoleEnum.SETUP_READ, RoleEnum.SETUP_WRITE],
+    deleteTarget
+  ),
 });

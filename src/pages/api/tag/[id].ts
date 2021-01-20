@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Tag, { ITag } from '~/model/Tag';
 import { createApiHandler } from '~/util/api';
 import { addOrPop } from '~/util/addOrPop';
+import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 
 export const findTag = async (
   req: NextApiRequest,
@@ -43,7 +44,7 @@ export const deleteTag = async (
 };
 
 export default createApiHandler({
-  GET: findTag,
-  PUT: updateTag,
-  DELETE: deleteTag,
+  GET: authMiddleware([RoleEnum.TAG_READ], findTag),
+  PUT: authMiddleware([RoleEnum.TAG_READ, RoleEnum.TAG_WRITE], updateTag),
+  DELETE: authMiddleware([RoleEnum.TAG_READ, RoleEnum.TAG_WRITE], deleteTag),
 });
