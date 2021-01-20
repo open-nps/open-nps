@@ -20,9 +20,6 @@ jobs:
       - name: Unit Tests
         run: yarn jest tests/unit --coverage
 
-      - name: Unit Tests
-        run: yarn jest tests/unit --coverage
-
       - uses: codecov/codecov-action@v1
         if: github.ref == 'refs/heads/master'
         with:

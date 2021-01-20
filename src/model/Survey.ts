@@ -1,10 +1,13 @@
+import get from 'lodash.get';
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
 import { ITarget } from './Target';
-import reviewerJSON from '~/reviewer.json';
 import Tag, { ITag } from './Tag';
 import { IConfig } from './Config';
+
+import reviewerJSON from '../reviewer.json';
+import surveyMeta from '../survey.json';
 
 export interface ISurvey extends Document {
   target?: string | ITarget;
@@ -23,6 +26,7 @@ export const SurveySchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  meta: surveyMeta,
   reviewer: {
     id: {
       type: String,
@@ -34,7 +38,6 @@ export const SurveySchema = new Schema({
     {
       type: String,
       index: true,
-      // ref: 'Tag'
     },
   ],
   note: {
