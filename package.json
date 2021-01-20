@@ -7,9 +7,9 @@
   "license": "MIT",
   "scripts": {
     "script": "ts-node --project tsconfig.scripts.json ./scripts",
-    "dev": "yarn script initUser && next dev",
+    "dev": "yarn script preStart && next dev",
     "build": "next build",
-    "start": "yarn script initUser && next start",
+    "start": "yarn script preStart && next start",
     "lint": "eslint './src' './tests'",
     "jest": "node --expose-gc ./node_modules/.bin/jest --config=jest.config.js --logHeapUsage"
   },
