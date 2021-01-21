@@ -4,12 +4,30 @@ exports[`/src/pages/survey/thanks should render properly 1`] = `
 <div
   className="root"
 >
+  <div
+    style={
+      Object {
+        "maxWidth": "auto",
+      }
+    }
+  >
+    <img
+      alt="bbbb"
+      src="aaaa"
+    />
+  </div>
   <WithStyles(ForwardRef(Typography))
-    component="h4"
+    component="h3"
     data-cy="ThanksPageTypography"
-    variant="h4"
+    variant="h3"
   >
     Foo Bar
+  </WithStyles(ForwardRef(Typography))>
+  <WithStyles(ForwardRef(Typography))
+    component="h4"
+    variant="h4"
+  >
+    Fizz Fuzz
   </WithStyles(ForwardRef(Typography))>
 </div>
 `;

@@ -10,10 +10,14 @@ describe('/src/pages/survey/thanks', () => {
     const props = ({
       templates: {
         ThanksPhrase: 'Foo Bar',
+        ThanksSubPhrase: 'Fizz Fuzz',
       },
       surveyId: 'fake',
       themeOpts: {
-        a: 1,
+        ThanksTopImage: {
+          url: 'aaaa',
+          alt: 'bbbb',
+        },
       },
       data: {
         b: 1,

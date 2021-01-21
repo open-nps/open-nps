@@ -24,7 +24,14 @@ declare interface ThemeOptionsConfigValues {
   // SurveyPage
   SurveyBoxBorderSize: string;
   SurveyBoxBorderRadius: string;
-  SurveyTopBrandImage: {
+  SurveyTopBrandImage?: {
+    url: string;
+    alt?: string;
+    width?: string;
+  };
+
+  // ThanksPage
+  ThanksTopImage?: {
     url: string;
     alt?: string;
     width?: string;
