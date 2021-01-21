@@ -86,7 +86,12 @@ export const SurveyPage: React.FC<LayoutProps> = ({
           />
         </div>
       )}
-      <Typography data-cy="SurveyPageTypography" variant="h4" component="h4">
+      <Typography
+        className={layoutClasses.corePhrase}
+        data-cy="SurveyPageTypography"
+        variant="h4"
+        component="h4"
+      >
         {renderTemplate(templates.CoreQuestionPhrase, data)}
       </Typography>
       <SurveyNotes
@@ -94,6 +99,15 @@ export const SurveyPage: React.FC<LayoutProps> = ({
         setValue={setValueForField('note')}
         selected={state.note}
       />
+      {templates.SurveyCommentText && (
+        <Typography
+          className={layoutClasses.commentPhrase}
+          variant="h4"
+          component="h4"
+        >
+          {renderTemplate(templates.SurveyCommentText, data)}
+        </Typography>
+      )}
       <SurveyComment
         value={state.comment}
         setValue={setValueForField('comment')}

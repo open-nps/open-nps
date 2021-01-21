@@ -9,13 +9,12 @@ export const createNewSurvey = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const { reviewer, tags, targetName } = req.body;
+  const { targetName, ...otherProps } = req.body;
   const target: ITarget = await Target.findOne({ name: targetName });
 
   const survey: ISurvey = await Survey.create({
     target: target._id,
-    tags,
-    reviewer,
+    ...otherProps,
   });
 
   return res.json(survey);

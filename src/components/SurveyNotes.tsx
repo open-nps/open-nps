@@ -1,14 +1,23 @@
 import React from 'react';
 
-import Button from '@material-ui/core/Button';
+import MUIButton from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
+import { ThemeOptions } from '@material-ui/core';
+
+/* istanbul ignore next */
+export const Button = withStyles((theme: ThemeOptions) => ({
+  root: {
+    minWidth: '35px',
+    fontSize: '16px',
+  },
+}))(MUIButton);
 
 /* istanbul ignore next */
 const styles = (theme) =>
   createStyles({
     buttonDiv: {
-      maxWidth: '700px',
+      maxWidth: '620px',
       width: '100%',
       display: 'flex',
       justifyContent: 'space-around',
@@ -31,8 +40,8 @@ const renderNotes = (
   selected,
   setValue
 ): React.ReactNodeArray =>
-  Object.keys(new Array(10).fill(1)).map((val) => {
-    const note = parseInt(val) + 1;
+  Object.keys(new Array(11).fill(1)).map((val) => {
+    const note = parseInt(val);
     return (
       <Button
         key={`nps-${val}`}

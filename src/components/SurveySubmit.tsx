@@ -14,7 +14,6 @@ const styles = (theme) =>
     root: {
       marginTop: theme.spacing(3),
       maxWidth: '600px',
-      width: '100%',
     },
   });
 
@@ -26,6 +25,7 @@ export const SurveySubmit: React.FC<Props> = ({ themeOpts, children }) => (
     variant="contained"
     type="submit"
     data-cy="SurveySubmit"
+    fullWidth={themeOpts.SurveySubmitBtnFullWidth}
   >
     {children}
   </Button>

@@ -36,11 +36,15 @@ const childrenStyles = ({
       padding: theme.spacing(4),
       border: `${SurveyBoxBorderSize} solid ${theme.palette.primary.main}`,
       borderRadius: SurveyBoxBorderRadius,
-
-      '& > h4': {
-        marginBottom: theme.spacing(3),
-        textAlign: 'justify',
-      },
+    },
+    corePhrase: {
+      marginBottom: theme.spacing(3),
+      textAlign: 'justify',
+    },
+    commentPhrase: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(1),
+      textAlign: 'justify',
     },
     brand: {
       width: '100%',

@@ -19,6 +19,7 @@ declare interface ThemeOptionsConfigValues {
   SurveySubmitBtnSize: MUISizes;
   SurveySubmitBtnVariant: MUIVariants;
   SurveySubmitBtnColor: MUIColors;
+  SurveySubmitBtnFullWidth: boolean;
 
   // SurveyPage
   SurveyBoxBorderSize: string;

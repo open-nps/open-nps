@@ -111,6 +111,7 @@ describe('/src/pages/survey/[id]', () => {
           CoreQuestionPhrase: 'Foo Bar',
           SurveyCommentLabel: 'Fizz',
           SurveyCommentPlaceholder: 'Fuzz',
+          SurveyCommentText: 'Fizz Fuzz',
         },
         surveyId: 'fake',
         themeOpts: {

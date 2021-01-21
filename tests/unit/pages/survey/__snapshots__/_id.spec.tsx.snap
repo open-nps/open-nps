@@ -36,6 +36,12 @@ exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render proper
       }
     }
   />
+  <WithStyles(ForwardRef(Typography))
+    component="h4"
+    variant="h4"
+  >
+    Fizz Fuzz
+  </WithStyles(ForwardRef(Typography))>
   <SurveyComment
     label="Fizz"
     placeholder="Fuzz"
