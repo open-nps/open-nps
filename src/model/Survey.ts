@@ -1,4 +1,3 @@
-import get from 'lodash.get';
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
@@ -18,6 +17,7 @@ export interface ISurvey extends Document {
   tags: string[];
   tagModelList: ITag[];
   getOverrideConfigs: () => IConfig[][];
+  hookFormat: (mod?: AnyObject) => AnyObject;
 }
 
 export const SurveySchema = new Schema({
@@ -57,7 +57,7 @@ export const SurveySchema = new Schema({
 
 SurveySchema.plugin(timestamp);
 
-export function getOverrideConfigs() {
+export function getOverrideConfigs(): ITag['overrideConfigs'][] {
   return Tag.find({
     name: { $in: this.tags },
   })
@@ -65,7 +65,21 @@ export function getOverrideConfigs() {
     .then((tags) => tags.map(({ overrideConfigs }) => overrideConfigs));
 }
 
+export function hookFormat(mod = {}): AnyObject {
+  return {
+    target: this.target,
+    meta: this.meta,
+    reviewer: this.reviewer,
+    tags: this.tags,
+    note: this.note,
+    concluded: this.concluded,
+    comment: this.comment,
+    ...mod,
+  };
+}
+
 SurveySchema.method('getOverrideConfigs', getOverrideConfigs);
+SurveySchema.method('hookFormat', hookFormat);
 
 export default (mongoose.models.Survey ||
   mongoose.model<ISurvey>('Survey', SurveySchema)) as Model<ISurvey>;

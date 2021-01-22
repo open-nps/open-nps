@@ -3,7 +3,7 @@ import get from 'lodash.get';
 import { createApiHandler } from '~/util/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 import User, { IUser } from '~/model/User';
-import Token, { IToken } from '~/model/Token';
+import Token from '~/model/Token';
 import { v4 as uuid } from 'uuid';
 import { authMiddleware } from '~/util/authMiddleware';
 

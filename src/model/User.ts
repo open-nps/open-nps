@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
-export const hashPassword = (value: string) =>
+export const hashPassword = (value: string): string =>
   crypto.createHash('sha256').update(value).digest('hex');
 
 export enum RoleEnum {
@@ -40,7 +40,7 @@ export interface IUser extends Document {
 }
 
 interface UserModel extends Model<IUser> {
-  findByEmailAndPassword(email: string, password: string): IUser;
+  findByEmailAndPassword(email: string, password: string): Promise<IUser>;
 }
 
 export const UserSchema = new Schema({
@@ -70,11 +70,11 @@ export function findByEmailAndPassword(
   this: UserModel,
   email: string,
   password: string
-) {
+): Promise<IUser> {
   return this.findOne({ email, password: hashPassword(password) });
 }
 
-export function preSave(this: IUser) {
+export function preSave(this: IUser): void {
   if (this.isNew || this.isModified('password')) {
     this.password = hashPassword(this.password);
   }

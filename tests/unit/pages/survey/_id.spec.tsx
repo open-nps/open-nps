@@ -1,10 +1,13 @@
 import React from 'react';
+import get from 'lodash.get';
 
 import {
   createSubmit,
   setValueForFieldInState,
   SurveyPage,
   ctxSurveyIdGetter,
+  OpenNpsEvents,
+  useEvents,
 } from '~/pages/survey/[id]';
 import { NextRouter } from 'next/router';
 import { shallow } from 'enzyme';
@@ -24,8 +27,12 @@ describe('/src/pages/survey/[id]', () => {
 
   beforeAll(() => {
     global.window = ({
+      onload: null,
       location: {
         origin: 'foobar',
+      },
+      parent: {
+        postMessage: jest.fn(),
       },
     } as unknown) as Window & typeof globalThis;
   });
@@ -46,7 +53,15 @@ describe('/src/pages/survey/[id]', () => {
       return response;
     };
 
+    const fakeEvents = ({
+      OpenNpsSubmit: jest.fn(),
+      OpenNpsSuccess: jest.fn(),
+    } as unknown) as OpenNpsEvents;
+
     const baseAsserts = (response) => {
+      expect(fakeEvents.OpenNpsSubmit).toHaveBeenCalledTimes(1);
+      expect(fakeEvents.OpenNpsSubmit).toHaveBeenCalledWith(fakeData);
+
       expect(response.json).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledWith(
@@ -63,12 +78,14 @@ describe('/src/pages/survey/[id]', () => {
     };
 
     it('should createSubmit right and trigger new route', async () => {
-      const onSubmit = createSubmit(fakeData, router);
+      const onSubmit = createSubmit(fakeData, router, fakeEvents);
       const response = createResponse({ ok: 1 });
 
       await onSubmit(fakeEvent);
 
       baseAsserts(response);
+      expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledTimes(1);
+      expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledWith(fakeData);
       expect(router.push).toHaveBeenCalledTimes(1);
       expect(router.push).toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
@@ -76,12 +93,14 @@ describe('/src/pages/survey/[id]', () => {
     });
 
     it('should createSubmit right and not trigger new route', async () => {
-      const onSubmit = createSubmit(fakeData, router);
+      const onSubmit = createSubmit(fakeData, router, fakeEvents);
       const response = createResponse({ ok: 0 });
 
       await onSubmit(fakeEvent);
 
       baseAsserts(response);
+      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalledTimes(1);
+      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalledWith(fakeData);
       expect(router.push).not.toHaveBeenCalledTimes(1);
       expect(router.push).not.toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
@@ -96,17 +115,23 @@ describe('/src/pages/survey/[id]', () => {
       const oldValue = 'fizz';
       const setState = jest.fn();
       const state = { preserve: 'fuzz', [field]: oldValue };
+      const mod = jest.fn();
 
-      setValueForFieldInState(state, setState)(field)(value);
+      setValueForFieldInState(state, setState)(field, mod)(value);
 
       expect(setState).toHaveBeenCalledTimes(1);
       expect(setState).toHaveBeenCalledWith({ ...state, [field]: value });
+      expect(mod).toHaveBeenCalledTimes(1);
+      expect(mod).toHaveBeenCalledWith({ ...state, [field]: value });
     });
   });
 
   describe('Page Component (SurveyPage)', () => {
     it('should render properly', () => {
+      (process as Any).browser = true;
+
       const props = ({
+        isIframe: true,
         templates: {
           CoreQuestionPhrase: 'Foo Bar',
           SurveyCommentLabel: 'Fizz',
@@ -128,8 +153,14 @@ describe('/src/pages/survey/[id]', () => {
         },
       } as unknown) as LayoutProps;
 
+      const useEffect = jest.spyOn(React, 'useEffect');
+
       const wrap = shallow(<SurveyPage {...props} />);
+      useEffect.mock.calls[0][0]();
+      window.onload({} as Any);
+
       expect(wrap).toMatchSnapshot();
+      expect(useEffect).toHaveBeenCalledTimes(1);
     });
 
     it('ctxSurveyIdGetter', () => {
@@ -137,6 +168,52 @@ describe('/src/pages/survey/[id]', () => {
         params: { id: 'foo' },
       } as unknown) as GetServerSidePropsContext;
       expect(ctxSurveyIdGetter(ctx)).toBe(ctx.params.id);
+    });
+  });
+
+  describe('useEvents', () => {
+    const createMessage = (title: string, data: Any) =>
+      JSON.stringify({ isOpenNps: true, title, data });
+
+    const createUseEventsTest = ({ willExecute }: { willExecute: boolean }) => {
+      const events = useEvents(willExecute);
+      const initialSurvey = {
+        reviewer: { name: 'foo' },
+        target: { name: 'bar' },
+      };
+      const survey = {
+        surveyId: 'foo',
+        note: 6,
+        comment: 'fizz fuzz',
+      } as Any;
+
+      events.OpenNpsChangeNote(survey);
+      events.OpenNpsChangeComment(survey);
+      events.OpenNpsSubmit(survey);
+      events.OpenNpsSuccess(survey);
+      events.OpenNpsLoad(initialSurvey);
+
+      const expecter = get(
+        expect(global.window.parent.postMessage),
+        willExecute ? 'toHaveBeenNthCalledWith' : 'not.toHaveBeenNthCalledWith'
+      );
+
+      expect(global.window.parent.postMessage).toHaveBeenCalledTimes(
+        willExecute ? 5 : 0
+      );
+      expecter(1, createMessage('OpenNpsChangeNote', survey.note), '*');
+      expecter(2, createMessage('OpenNpsChangeComment', survey.comment), '*');
+      expecter(3, createMessage('OpenNpsSubmit', survey), '*');
+      expecter(4, createMessage('OpenNpsSuccess', survey), '*');
+      expecter(5, createMessage('OpenNpsLoad', initialSurvey), '*');
+    };
+
+    it('should create events and not execute them', () => {
+      createUseEventsTest({ willExecute: false });
+    });
+
+    it('should create events and execute them', () => {
+      createUseEventsTest({ willExecute: true });
     });
   });
 });

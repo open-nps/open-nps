@@ -8,7 +8,7 @@ export { RoleEnum } from '~/model/User';
 export const authMiddleware = (
   roles: typeof Role[number][],
   callback: NextApiHandler
-) => async (req: NextApiRequest, res: NextApiResponse) => {
+) => async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const token: IToken = await Token.findOne({
     hash: req.headers.authorization,
   }).populate('user');

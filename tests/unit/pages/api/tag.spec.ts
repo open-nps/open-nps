@@ -66,7 +66,6 @@ describe('/pages/api/tag', () => {
     });
 
     it('should updateTag correctly', async () => {
-      const newMeta = { x: 1 };
       const fakeTag = {
         name: 'foo',
         overrideConfigs: ['bar'],

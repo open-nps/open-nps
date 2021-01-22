@@ -75,6 +75,7 @@ export interface LayoutProps extends LayoutSharedProps {
 }
 
 interface LayoutSharedProps {
+  isIframe: boolean;
   themeOpts: ThemeOptionsConfigValues;
   templates: TemplatesConfigValues;
   surveyId: string;
@@ -133,6 +134,7 @@ export const getServerSidePropsFn = ({
 
   return {
     props: {
+      isIframe: ctx.query.hasOwnProperty('iframe'), // eslint-disable-line
       mui: get(configs, 'mui', {}),
       templates: AddDefaultTemplates(configs.templates),
       themeOpts: AddThemeOptsDefaults(configs.themeOpts),

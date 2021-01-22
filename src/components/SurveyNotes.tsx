@@ -3,10 +3,9 @@ import React from 'react';
 import MUIButton from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
-import { ThemeOptions } from '@material-ui/core';
 
 /* istanbul ignore next */
-export const Button = withStyles((theme: ThemeOptions) => ({
+export const Button = withStyles(() => ({
   root: {
     minWidth: '35px',
     fontSize: '16px',

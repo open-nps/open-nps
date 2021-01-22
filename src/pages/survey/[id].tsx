@@ -30,10 +30,14 @@ interface SubmitData {
   comment: string;
 }
 
-export const createSubmit = (data: SubmitData, router: NextRouter) => async (
-  e: React.FormEvent<HTMLFormElement>
-): Promise<void> => {
+export type OpenNpsEvents = ReturnType<typeof useEvents>;
+export const createSubmit = (
+  data: SubmitData,
+  router: NextRouter,
+  events: OpenNpsEvents
+) => async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
   e.preventDefault();
+  events.OpenNpsSubmit(data);
   const response = await fetch(
     `${window.location.origin}/api/survey/conclude`,
     {
@@ -49,15 +53,41 @@ export const createSubmit = (data: SubmitData, router: NextRouter) => async (
   const { ok } = await response.json();
 
   if (ok) {
+    events.OpenNpsSuccess(data);
     router.push(`/survey/thanks?surveyId=${data.surveyId}`);
   }
 };
 
+const checkAndPostMessage = (shouldInvoke: boolean, title: string, data: Any) =>
+  shouldInvoke &&
+  window.parent.postMessage(
+    JSON.stringify({ isOpenNps: true, title, data }),
+    '*'
+  );
+
+export const useEvents = (shouldInvoke: boolean): AnyObject => ({
+  OpenNpsChangeNote: ({ note }: SubmitData) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsChangeNote', note),
+  OpenNpsChangeComment: ({ comment }: SubmitData) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsChangeComment', comment),
+  OpenNpsSubmit: (data: SubmitData) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsSubmit', data),
+  OpenNpsSuccess: (data: SubmitData) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsSuccess', data),
+  OpenNpsLoad: (data: { reviewer: AnyObject; target: AnyObject }) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsLoad', data),
+});
+
 export const setValueForFieldInState = (
   state: AnyObject,
   setState: SimpleFn<AnyObject, void>
-) => (field: string) => (value: string): void =>
-  setState({ ...state, [field]: value });
+) => (field: string, mod: SimpleFn<AnyObject, void>) => (
+  value: string
+): void => {
+  const newState = { ...state, [field]: value };
+  setState(newState);
+  mod(newState);
+};
 
 export const SurveyPage: React.FC<LayoutProps> = ({
   themeOpts,
@@ -65,11 +95,19 @@ export const SurveyPage: React.FC<LayoutProps> = ({
   data,
   surveyId,
   layoutClasses,
+  isIframe,
 }): React.ReactElement => {
   const [state, setState] = useState({ note: null, comment: '' });
   const router = useRouter();
-  const onSubmit = createSubmit({ surveyId, ...state }, router);
+  const events = useEvents(process.browser && isIframe);
+  const onSubmit = createSubmit({ surveyId, ...state }, router, events);
   const setValueForField = setValueForFieldInState(state, setState);
+
+  React.useEffect(() => {
+    window.onload = function () {
+      events.OpenNpsLoad(data);
+    };
+  });
 
   return (
     <form className={layoutClasses.root} onSubmit={onSubmit}>
@@ -96,7 +134,7 @@ export const SurveyPage: React.FC<LayoutProps> = ({
       </Typography>
       <SurveyNotes
         themeOpts={themeOpts}
-        setValue={setValueForField('note')}
+        setValue={setValueForField('note', events.OpenNpsChangeNote)}
         selected={state.note}
       />
       {templates.SurveyCommentText && (
@@ -110,7 +148,7 @@ export const SurveyPage: React.FC<LayoutProps> = ({
       )}
       <SurveyComment
         value={state.comment}
-        setValue={setValueForField('comment')}
+        setValue={setValueForField('comment', events.OpenNpsChangeComment)}
         label={templates.SurveyCommentLabel}
         placeholder={templates.SurveyCommentPlaceholder}
       />

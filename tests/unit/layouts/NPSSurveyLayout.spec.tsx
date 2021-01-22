@@ -23,7 +23,10 @@ describe('/src/layouts/NPSSurveyLayout', () => {
   const getOverrideConfigs = jest.fn();
   const surveyExtraData = { concluded: false };
   const fakeCtxId = 'foo';
-  const fakeCtx = ({ foo: 'bar' } as unknown) as GetServerSidePropsContext;
+  const fakeCtx = ({
+    foo: 'bar',
+    query: {},
+  } as unknown) as GetServerSidePropsContext;
   const fakeMuiValue = { a: 1 };
   const fakeTemplateValue = {
     CoreQuestionPhrase: 'a',
@@ -81,18 +84,19 @@ describe('/src/layouts/NPSSurveyLayout', () => {
   });
 
   it('should return a handle from getServerSidePropsFn and its return props', async () => {
-    fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
-    (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
     const targetPopulate = simulatePopulate(
       Target.findById as jest.Mock,
       fakeTarget
     );
+    fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
+    (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
 
     const res: AnyObject = await handle(fakeCtx);
 
     baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('notFound');
     expect(res.props).toHaveProperty('mui', fakeMuiValue);
+    expect(res.props).toHaveProperty('isIframe', false);
     expect(res.props).toHaveProperty('templates', fakeTemplateValue);
     expect(res.props).toHaveProperty('themeOpts', AddThemeOptsDefaults({}));
     expect(res.props).toHaveProperty('surveyId', fakeCtxId);
@@ -111,11 +115,13 @@ describe('/src/layouts/NPSSurveyLayout', () => {
       fakeTarget
     );
 
+    fakeCtx.query.iframe = '';
     const res: AnyObject = await handle(fakeCtx);
 
     baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('notFound');
     expect(res.props).toHaveProperty('mui', fakeMuiNewConfig);
+    expect(res.props).toHaveProperty('isIframe', true);
     expect(res.props).toHaveProperty('templates', fakeTemplateValue);
     expect(res.props).toHaveProperty('themeOpts', AddThemeOptsDefaults({}));
     expect(res.props).toHaveProperty('surveyId', fakeCtxId);

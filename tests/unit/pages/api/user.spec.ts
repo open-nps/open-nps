@@ -1,9 +1,6 @@
 jest.mock('../../../../src/model/User');
-jest.mock('uuid');
 
-import merge from 'lodash.merge';
 import { NextApiResponse, NextApiRequest } from 'next';
-import { v4 as uuid } from 'uuid';
 
 import User, { RoleEnum } from '~/model/User';
 
