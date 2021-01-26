@@ -7,7 +7,8 @@ import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 /* istanbul ignore next */
 export const Button = withStyles(() => ({
   root: {
-    minWidth: '35px',
+    maxWidth: '36px',
+    minWidth: '36px',
     fontSize: '16px',
   },
 }))(MUIButton);
