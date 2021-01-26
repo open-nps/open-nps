@@ -3,11 +3,16 @@ import timestamp from 'mongoose-timestamp';
 import { ITarget } from './Target';
 
 export enum HookEvent {
+  ON_NEW_SURVEY = 'ON_NEW_SURVEY',
   ON_SUBMIT = 'ON_SUBMIT',
   ON_SUCCESS = 'ON_SUCCESS',
 }
 
-export const HookEvents = [HookEvent.ON_SUBMIT, HookEvent.ON_SUCCESS];
+export const HookEvents = [
+  HookEvent.ON_SUBMIT,
+  HookEvent.ON_SUCCESS,
+  HookEvent.ON_NEW_SURVEY,
+];
 
 export interface IHook extends Document {
   event: HookEvent;

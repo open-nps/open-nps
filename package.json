@@ -1,6 +1,6 @@
 {
   "name": "open-nps",
-  "version": "2.5.0",
+  "version": "2.6.1",
   "main": "index.js",
   "repository": "git@github.com:guidiego/open-nps.git",
   "author": "Guilherme Diego <guilherme.albino.francisco@gmail.com>",
@@ -27,6 +27,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.2",
     "@material-ui/styles": "^4.11.2",
+    "dateformat": "^4.5.0",
     "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.2",
     "mongoose": "^5.11.8",
@@ -40,6 +41,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/dateformat": "^3.0.1",
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.19",
     "@types/mongoose": "^5.10.3",

@@ -18,7 +18,7 @@ jobs:
         run: yarn lint
 
       - name: Unit Tests
-        run: yarn jest tests/unit --coverage
+        run: CI=1 yarn jest tests/unit --coverage
 
       - uses: codecov/codecov-action@v1
         if: github.ref == 'refs/heads/master'

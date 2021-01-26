@@ -1,3 +1,4 @@
+import dateformat from 'dateformat';
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
@@ -67,6 +68,7 @@ export function getOverrideConfigs(): ITag['overrideConfigs'][] {
 
 export function hookFormat(mod = {}): AnyObject {
   return {
+    _id: this._id.toString(),
     target: this.target,
     meta: this.meta,
     reviewer: this.reviewer,
@@ -74,6 +76,8 @@ export function hookFormat(mod = {}): AnyObject {
     note: this.note,
     concluded: this.concluded,
     comment: this.comment,
+    createdAt: dateformat(this.createdAt, 'yyyy-mm-dd HH:MM:ss'),
+    updatedAt: dateformat(this.updatedAt, 'yyyy-mm-dd HH:MM:ss'),
     ...mod,
   };
 }
