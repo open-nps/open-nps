@@ -3,11 +3,14 @@ import Typography from '@material-ui/core/Typography';
 import get from 'lodash.get';
 
 import { useRouter, NextRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, Redirect } from 'next';
 
 import SurveyNotes from '~/components/SurveyNotes';
 import SurveyComment from '~/components/SurveyComment';
 import SurveySubmit from '~/components/SurveySubmit';
+
+import { ISurvey } from '~/model/Survey';
+import { ITarget } from '~/model/Target';
 
 import { renderTemplate } from '~/util/renderTemplate';
 import {
@@ -19,9 +22,21 @@ import {
 export const ctxSurveyIdGetter = (ctx: GetServerSidePropsContext): string =>
   ctx.params.id as string;
 
+export const handle404 = (survey: ISurvey, target: ITarget): boolean =>
+  !survey || !target;
+
+export const handleRedirect = (survey: ISurvey): Redirect | null =>
+  !survey.concluded
+    ? null
+    : {
+        destination: `/survey/thanks?surveyId=${survey._id}`,
+        permanent: false,
+      };
+
 export const getServerSideProps = getServerSidePropsFn({
   ctxSurveyIdGetter,
-  surveyExtraData: { concluded: false },
+  handle404,
+  handleRedirect,
 });
 
 interface SubmitData {

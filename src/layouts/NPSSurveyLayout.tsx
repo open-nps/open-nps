@@ -3,7 +3,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
 
-import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import {
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+  Redirect,
+} from 'next';
 import {
   ThemeProvider,
   createMuiTheme,
@@ -91,7 +95,8 @@ interface Props extends LayoutSharedProps {
 
 interface GetServerSideProps {
   ctxSurveyIdGetter(ctx: GetServerSidePropsContext): string;
-  surveyExtraData: { concluded: boolean };
+  handle404(survey: ISurvey, target?: ITarget): boolean;
+  handleRedirect(survey: ISurvey, target?: ITarget): Redirect | null;
 }
 
 const mapConfigsFromList = (configs: IConfig[]) =>
@@ -99,7 +104,8 @@ const mapConfigsFromList = (configs: IConfig[]) =>
 
 export const getServerSidePropsFn = ({
   ctxSurveyIdGetter,
-  surveyExtraData,
+  handle404,
+  handleRedirect,
 }: GetServerSideProps) => async (
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<Props>> => {
@@ -109,17 +115,19 @@ export const getServerSidePropsFn = ({
 
   await connectMongo();
 
-  const survey: ISurvey = await Survey.findOne({
-    _id: surveyId,
-    ...surveyExtraData,
-  });
+  const survey: ISurvey = await Survey.findOne({ _id: surveyId });
 
   const target: ITarget = survey
     ? await Target.findById(survey.target).populate('configs', { _id: 0 })
     : null;
 
-  if (!survey || !target) {
+  if (handle404(survey, target)) {
     return { notFound: true };
+  }
+
+  const redirect = handleRedirect(survey, target);
+  if (redirect) {
+    return { redirect };
   }
 
   const overrideConfigsList = await survey.getOverrideConfigs();

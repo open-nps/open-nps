@@ -2,7 +2,10 @@ import React from 'react';
 import get from 'lodash.get';
 import Typography from '@material-ui/core/Typography';
 
-import { GetServerSidePropsContext } from 'next';
+import { ISurvey } from '~/model/Survey';
+import { ITarget } from '~/model/Target';
+
+import { GetServerSidePropsContext, Redirect } from 'next';
 
 import {
   withLayout,
@@ -14,9 +17,21 @@ import { renderTemplate } from '~/util/renderTemplate';
 export const ctxSurveyIdGetter = (ctx: GetServerSidePropsContext): string =>
   ctx.query.surveyId as string;
 
+export const handle404 = (survey: ISurvey, target: ITarget): boolean =>
+  !survey || !target;
+
+export const handleRedirect = (survey: ISurvey): Redirect | null =>
+  survey.concluded
+    ? null
+    : {
+        destination: `/survey/${survey._id}`,
+        permanent: false,
+      };
+
 export const getServerSideProps = getServerSidePropsFn({
   ctxSurveyIdGetter,
-  surveyExtraData: { concluded: true },
+  handle404,
+  handleRedirect,
 });
 
 export const ThanksPage: React.FC<LayoutProps> = ({

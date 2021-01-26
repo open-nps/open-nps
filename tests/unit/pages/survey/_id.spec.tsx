@@ -8,11 +8,16 @@ import {
   ctxSurveyIdGetter,
   OpenNpsEvents,
   useEvents,
+  handle404,
+  handleRedirect,
 } from '~/pages/survey/[id]';
 import { NextRouter } from 'next/router';
 import { shallow } from 'enzyme';
 import { LayoutProps } from '~/layouts/NPSSurveyLayout';
 import { GetServerSidePropsContext } from 'next';
+
+import { ISurvey } from '~/model/Survey';
+import { ITarget } from '~/model/Target';
 
 describe('/src/pages/survey/[id]', () => {
   const fetch = global.fetch;
@@ -214,6 +219,28 @@ describe('/src/pages/survey/[id]', () => {
 
     it('should create events and execute them', () => {
       createUseEventsTest({ willExecute: true });
+    });
+  });
+
+  it('handle404', () => {
+    const fakeSurvey = {
+      _id: '123',
+      reviewer: {},
+      concluded: false,
+    } as ISurvey;
+    const fakeTarget = { _id: '123', name: 'opennps' } as ITarget;
+    expect(handle404(null, null)).toBe(true);
+    expect(handle404(fakeSurvey, null)).toBe(true);
+    expect(handle404(null, fakeTarget)).toBe(true);
+    expect(handle404(fakeSurvey, fakeTarget)).toBe(false);
+  });
+
+  it('handleRedirect', () => {
+    const _id = '123';
+    expect(handleRedirect({ _id, concluded: false } as ISurvey)).toBe(null);
+    expect(handleRedirect({ _id, concluded: true } as ISurvey)).toEqual({
+      destination: `/survey/thanks?surveyId=${_id}`,
+      permanent: false,
     });
   });
 });

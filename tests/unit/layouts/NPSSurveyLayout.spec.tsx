@@ -21,7 +21,8 @@ import { AddThemeOptsDefaults } from '~/util/themeOpts';
 describe('/src/layouts/NPSSurveyLayout', () => {
   let handle;
   const getOverrideConfigs = jest.fn();
-  const surveyExtraData = { concluded: false };
+  const handle404 = jest.fn();
+  const handleRedirect = jest.fn();
   const fakeCtxId = 'foo';
   const fakeCtx = ({
     foo: 'bar',
@@ -58,24 +59,35 @@ describe('/src/layouts/NPSSurveyLayout', () => {
     return populate;
   };
 
-  const baseAsserts = (targetPopulate?: jest.Mock) => {
+  const baseAsserts = (
+    targetPopulate?: jest.Mock,
+    shouldHandleRedirect = true
+  ) => {
     expect(Survey.findOne).toHaveBeenCalledTimes(1);
-    expect(Survey.findOne).toHaveBeenCalledWith({
-      _id: fakeCtxId,
-      ...surveyExtraData,
-    });
+    expect(Survey.findOne).toHaveBeenCalledWith({ _id: fakeCtxId });
 
     if (targetPopulate) {
       expect(Target.findById).toHaveBeenCalledTimes(1);
       expect(Target.findById).toHaveBeenCalledWith(fakeTargetId);
       expect(targetPopulate).toHaveBeenCalledTimes(1);
     }
+
+    expect(handle404).toHaveBeenCalledTimes(1);
+
+    if (shouldHandleRedirect) {
+      expect(handleRedirect).toHaveBeenCalledTimes(1);
+      expect(handleRedirect).toHaveBeenCalledWith(fakeSurvey, fakeTarget);
+      expect(handle404).toHaveBeenCalledWith(fakeSurvey, fakeTarget);
+    } else {
+      expect(handle404).toHaveBeenCalledWith(null, null);
+    }
   };
 
   beforeEach(() => {
     handle = getServerSidePropsFn({
       ctxSurveyIdGetter: jest.fn().mockReturnValue(fakeCtxId),
-      surveyExtraData,
+      handle404,
+      handleRedirect,
     });
   });
 
@@ -89,12 +101,15 @@ describe('/src/layouts/NPSSurveyLayout', () => {
       fakeTarget
     );
     fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
+    handle404.mockReturnValue(false);
+    handleRedirect.mockReturnValue(null);
     (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
 
     const res: AnyObject = await handle(fakeCtx);
 
     baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('notFound');
+    expect(res).not.toHaveProperty('redirect');
     expect(res.props).toHaveProperty('mui', fakeMuiValue);
     expect(res.props).toHaveProperty('isIframe', false);
     expect(res.props).toHaveProperty('templates', fakeTemplateValue);
@@ -115,11 +130,14 @@ describe('/src/layouts/NPSSurveyLayout', () => {
       fakeTarget
     );
 
+    handle404.mockReturnValue(false);
+    handleRedirect.mockReturnValue(null);
     fakeCtx.query.iframe = '';
     const res: AnyObject = await handle(fakeCtx);
 
     baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('notFound');
+    expect(res).not.toHaveProperty('redirect');
     expect(res.props).toHaveProperty('mui', fakeMuiNewConfig);
     expect(res.props).toHaveProperty('isIframe', true);
     expect(res.props).toHaveProperty('templates', fakeTemplateValue);
@@ -129,28 +147,38 @@ describe('/src/layouts/NPSSurveyLayout', () => {
     expect(res.props.data).toHaveProperty('target', fakeTarget.meta);
   });
 
-  it('should return a handle from getServerSidePropsFn and its return notFound for survey', async () => {
+  it('should return a handle from getServerSidePropsFn and its return notFound', async () => {
     fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
     (Survey.findOne as jest.Mock).mockResolvedValue(null);
     simulatePopulate(Target.findById as jest.Mock, fakeTarget);
 
+    handle404.mockReturnValue(true);
+    handleRedirect.mockReturnValue(null);
     const res: AnyObject = await handle(fakeCtx);
 
-    baseAsserts();
+    baseAsserts(null, false);
     expect(res).not.toHaveProperty('props');
+    expect(res).not.toHaveProperty('redirect');
     expect(res).toHaveProperty('notFound', true);
   });
 
-  it('should return a handle from getServerSidePropsFn and its return notFound for target', async () => {
+  it('should return a handle from getServerSidePropsFn and its return redirect', async () => {
     fakeSurvey.getOverrideConfigs.mockResolvedValue([]);
     (Survey.findOne as jest.Mock).mockResolvedValue(fakeSurvey);
-    const targetPopulate = simulatePopulate(Target.findById as jest.Mock, null);
+    const targetPopulate = simulatePopulate(
+      Target.findById as jest.Mock,
+      fakeTarget
+    );
+    const redirect = { destination: '/', permanent: true };
 
+    handle404.mockReturnValue(false);
+    handleRedirect.mockReturnValue(redirect);
     const res: AnyObject = await handle(fakeCtx);
 
     baseAsserts(targetPopulate);
     expect(res).not.toHaveProperty('props');
-    expect(res).toHaveProperty('notFound', true);
+    expect(res).not.toHaveProperty('notFound');
+    expect(res).toHaveProperty('redirect', redirect);
   });
 
   it('should withLayout return a valid React.FC', () => {
