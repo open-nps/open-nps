@@ -30,7 +30,7 @@ export const HookSchema = new Schema<IHook, HookModel>({
   event: {
     type: String,
     enum: HookEvents,
-    unique: true,
+    index: true,
     required: true,
   },
   urls: [
