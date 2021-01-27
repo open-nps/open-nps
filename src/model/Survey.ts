@@ -21,7 +21,7 @@ export interface ISurvey extends Document {
   hookFormat: (mod?: AnyObject) => AnyObject;
 }
 
-export const SurveySchema = new Schema({
+export const SurveySchema = new Schema<ISurvey>({
   target: {
     ref: 'Target',
     type: Schema.Types.ObjectId,

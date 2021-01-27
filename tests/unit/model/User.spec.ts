@@ -15,7 +15,8 @@ describe('src/model/User', () => {
     const fakeReturn = 'fizzfuzz';
     const email = 'foo';
     const password = 'bar';
-    const findOne = jest.fn().mockReturnValue(fakeReturn);
+    const exec = jest.fn().mockReturnValue(fakeReturn);
+    const findOne = jest.fn().mockReturnValue({ exec });
 
     expect(findByEmailAndPassword.apply({ findOne }, [email, password])).toBe(
       fakeReturn
@@ -25,6 +26,8 @@ describe('src/model/User', () => {
       email,
       password: hashPassword(password),
     });
+
+    expect(exec).toHaveBeenCalledTimes(1);
   });
 
   it('should exec preSave and edit password when document isNew, isModified false', async () => {

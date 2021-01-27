@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, Query } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
 export const hashPassword = (value: string): string =>
@@ -43,7 +43,7 @@ interface UserModel extends Model<IUser> {
   findByEmailAndPassword(email: string, password: string): Promise<IUser>;
 }
 
-export const UserSchema = new Schema({
+export const UserSchema = new Schema<IUser, UserModel>({
   email: {
     type: String,
     required: true,
@@ -71,7 +71,7 @@ export function findByEmailAndPassword(
   email: string,
   password: string
 ): Promise<IUser> {
-  return this.findOne({ email, password: hashPassword(password) });
+  return this.findOne({ email, password: hashPassword(password) }).exec();
 }
 
 export function preSave(this: IUser): void {

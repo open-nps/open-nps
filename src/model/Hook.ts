@@ -26,7 +26,7 @@ interface HookModel extends Model<IHook> {
   findByTargetMappedByEvent(target: string): Record<HookEvent, IHook>;
 }
 
-export const HookSchema = new Schema({
+export const HookSchema = new Schema<IHook, HookModel>({
   event: {
     type: String,
     enum: HookEvents,
