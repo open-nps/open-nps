@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import mongoose, { Schema, Document, Model, Query } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 
 export const hashPassword = (value: string): string =>

@@ -1,13 +1,18 @@
 import initUser from './initUser';
 import downloadSchemaFiles from './downloadSchemaFiles';
-import preStart from './preStart';
+import start from './start';
 
 const script = {
   initUser,
   downloadSchemaFiles,
-  preStart,
+  start,
 }[process.argv[2]];
 
-script().then(() => {
-  process.exit(0);
-});
+script()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

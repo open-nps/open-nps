@@ -2,7 +2,11 @@ jest.mock('../../../src/model/Tag');
 
 import dateformat from 'dateformat';
 import Tag from '../../../src/model/Tag';
-import { getOverrideConfigs, hookFormat } from '../../../src/model/Survey';
+import {
+  getOverrideConfigs,
+  hookFormat,
+  loadFromProcessOrFile,
+} from '../../../src/model/Survey';
 
 describe('src/model/Survey', () => {
   it('should exec getOverrideConfigs properly', async () => {
@@ -49,5 +53,12 @@ describe('src/model/Survey', () => {
       ...overrideDates,
     });
     expect(hookFormat.apply(doc, [])).toEqual({ ...doc, ...overrideDates });
+  });
+
+  it('should loadFromProcessOrFile from process.env', () => {
+    const fakeJson = { foo: 'bar' };
+    process.env.TEST = JSON.stringify(fakeJson);
+
+    expect(loadFromProcessOrFile('TEST', {})).toEqual(fakeJson);
   });
 });

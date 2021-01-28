@@ -6,8 +6,8 @@ import { ITarget } from './Target';
 import Tag, { ITag } from './Tag';
 import { IConfig } from './Config';
 
-import reviewerJSON from '../reviewer.json';
-import surveyMeta from '../survey.json';
+import reviewerMetaFile from '../reviewer.json';
+import surveyMetaFile from '../survey.json';
 
 export interface ISurvey extends Document {
   target?: string | ITarget;
@@ -21,6 +21,18 @@ export interface ISurvey extends Document {
   hookFormat: (mod?: AnyObject) => AnyObject;
 }
 
+export const loadFromProcessOrFile = (
+  processKey: string,
+  file: AnyObject
+): AnyObject =>
+  process.env[processKey] ? JSON.parse(process.env[processKey]) : file;
+
+const surveyMeta = loadFromProcessOrFile('SURVEY_SCHEMA_JSON', surveyMetaFile);
+const reviewerMeta = loadFromProcessOrFile(
+  'REVIEWER_SCHEMA_JSON',
+  reviewerMetaFile
+);
+
 export const SurveySchema = new Schema<ISurvey>({
   target: {
     ref: 'Target',
@@ -33,7 +45,7 @@ export const SurveySchema = new Schema<ISurvey>({
       type: String,
       required: true,
     },
-    ...reviewerJSON,
+    ...reviewerMeta,
   },
   tags: [
     {

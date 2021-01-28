@@ -1,7 +1,6 @@
 #!/bin/bash
 import https from 'https';
 import fs from 'fs';
-import { resolve } from 'path';
 
 const httpGet = (url: string) =>
   new Promise((resolve, reject) => {
@@ -29,11 +28,11 @@ export default async () => {
 
   if (process.env.SURVEY_SCHEMA) {
     const survey = await httpGet(process.env.SURVEY_SCHEMA);
-    fs.writeFileSync(resolvePath('survey.json'), survey as string);
+    process.env.SURVEY_SCHEMA_JSON = survey as string;
   }
 
   if (process.env.REVIEWER_SCHEMA) {
     const reviewer = await httpGet(process.env.REVIEWER_SCHEMA);
-    fs.writeFileSync(resolvePath('reviewer.json'), reviewer as string);
+    process.env.REVIEWER_SCHEMA_JSON = reviewer as string;
   }
 };
