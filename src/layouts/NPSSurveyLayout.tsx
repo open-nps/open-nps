@@ -23,6 +23,7 @@ import { ISurvey } from '~/model/Survey';
 import { IConfig } from '~/model/Config';
 import { AddThemeOptsDefaults } from '~/util/themeOpts';
 import { AddDefaultTemplates } from '~/util/templates';
+import { logger } from '~/util/logger';
 
 const childrenStyles = ({
   SurveyBoxBorderSize,
@@ -109,24 +110,31 @@ export const getServerSidePropsFn = ({
 }: GetServerSideProps) => async (
   ctx: GetServerSidePropsContext
 ): Promise<GetServerSidePropsResult<Props>> => {
+  logger.silly('start: NPSSurveyLayout.getServerSideProps');
+
   const surveyId = ctxSurveyIdGetter(ctx);
   const { connectMongo } = await import('../util/mongo');
   const { Target, Survey } = await import('../model');
+  const log = `NPSSurveyLayout.getServerSideProps.SurveyId<${surveyId}>`;
 
+  logger.silly(log);
   await connectMongo();
 
   const survey: ISurvey = await Survey.findOne({ _id: surveyId });
+  logger.debug(log, { survey });
 
   const target: ITarget = survey
     ? await Target.findById(survey.target).populate('configs', { _id: 0 })
     : null;
 
   if (handle404(survey, target)) {
+    logger.debug(log, { handle: 'NotFound' });
     return { notFound: true };
   }
 
   const redirect = handleRedirect(survey, target);
   if (redirect) {
+    logger.debug(log, { handle: 'Redirect' });
     return { redirect };
   }
 
@@ -140,19 +148,20 @@ export const getServerSidePropsFn = ({
     ...overrideConfigs,
   ].reduce((a, b) => merge(a, b), {});
 
-  return {
-    props: {
-      isIframe: ctx.query.hasOwnProperty('iframe'), // eslint-disable-line
-      mui: get(configs, 'mui', {}),
-      templates: AddDefaultTemplates(configs.templates),
-      themeOpts: AddThemeOptsDefaults(configs.themeOpts),
-      data: {
-        reviewer: JSON.parse(JSON.stringify(survey.reviewer)),
-        target: get(target, 'meta', {}),
-      },
-      surveyId,
+  const props = {
+    isIframe: ctx.query.hasOwnProperty('iframe'), // eslint-disable-line
+    mui: get(configs, 'mui', {}),
+    templates: AddDefaultTemplates(configs.templates),
+    themeOpts: AddThemeOptsDefaults(configs.themeOpts),
+    data: {
+      reviewer: JSON.parse(JSON.stringify(survey.reviewer)),
+      target: get(target, 'meta', {}),
     },
+    surveyId,
   };
+
+  logger.debug(log, { props });
+  return { props };
 };
 
 /* istanbul ignore next */

@@ -1,6 +1,6 @@
 {
   "name": "open-nps",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "main": "index.js",
   "repository": "git@github.com:guidiego/open-nps.git",
   "author": "Guilherme Diego <guilherme.albino.francisco@gmail.com>",
@@ -40,7 +40,8 @@
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.1.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/dateformat": "^3.0.1",

@@ -113,8 +113,13 @@ describe('/pages/api/survey', () => {
       });
       expect(res.json).toHaveBeenCalledTimes(1);
       expect(res.json).toHaveBeenCalledWith(updatedSurvey);
-      expect(survey.hookFormat).toHaveBeenCalledTimes(2);
-      expect(survey.hookFormat).toHaveBeenNthCalledWith(2, {
+      expect(survey.hookFormat).toHaveBeenCalledTimes(4);
+      expect(survey.hookFormat).toHaveBeenNthCalledWith(3, {
+        concluded: true,
+        note,
+        comment,
+      });
+      expect(survey.hookFormat).toHaveBeenNthCalledWith(4, {
         concluded: true,
         note,
         comment,
