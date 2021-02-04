@@ -5,6 +5,7 @@ declare interface TemplatesConfigValues {
   SurveyCommentPlaceholder?: string;
   SurveyCommentText?: string;
   SendButtonMessage?: string;
+  MissingNoteError: string;
 
   // Thanks Page
   ThanksPhrase: string;

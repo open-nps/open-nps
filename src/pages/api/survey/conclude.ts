@@ -11,6 +11,10 @@ export const concludeSurvey = async (
 ): Promise<void> => {
   const { note, comment, surveyId } = req.body;
 
+  if (!note) {
+    return res.status(500).json({ missing: 'note' });
+  }
+
   const survey: ISurvey = await Survey.findOne({
     _id: surveyId,
     concluded: false,

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import get from 'lodash.get';
 
 import { useRouter, NextRouter } from 'next/router';
@@ -49,6 +51,7 @@ export type OpenNpsEvents = ReturnType<typeof useEvents>;
 export const createSubmit = (
   data: SubmitData,
   router: NextRouter,
+  setMissingNote: () => void,
   events: OpenNpsEvents
 ) => async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
   e.preventDefault();
@@ -67,7 +70,10 @@ export const createSubmit = (
 
   const { ok } = await response.json();
 
-  if (ok) {
+  if (response.status === 500) {
+    setMissingNote();
+    events.OpenNpsError(data);
+  } else if (ok) {
     events.OpenNpsSuccess(data);
     router.push(`/survey/thanks?surveyId=${data.surveyId}`);
   }
@@ -91,6 +97,8 @@ export const useEvents = (shouldInvoke: boolean): AnyObject => ({
     checkAndPostMessage(shouldInvoke, 'OpenNpsSuccess', data),
   OpenNpsLoad: (data: { reviewer: AnyObject; target: AnyObject }) =>
     checkAndPostMessage(shouldInvoke, 'OpenNpsLoad', data),
+  OpenNpsError: (data: { reviewer: AnyObject; target: AnyObject }) =>
+    checkAndPostMessage(shouldInvoke, 'OpenNpsError', data),
 });
 
 export const setValueForFieldInState = (
@@ -104,6 +112,11 @@ export const setValueForFieldInState = (
   mod(newState);
 };
 
+export const setErrorState = (
+  state: AnyObject,
+  setState: SimpleFn<AnyObject, void>
+) => (error: string) => (): void => setState({ ...state, error });
+
 export const SurveyPage: React.FC<LayoutProps> = ({
   themeOpts,
   templates,
@@ -112,11 +125,18 @@ export const SurveyPage: React.FC<LayoutProps> = ({
   layoutClasses,
   isIframe,
 }): React.ReactElement => {
-  const [state, setState] = useState({ note: null, comment: '' });
+  const [state, setState] = useState({ note: null, comment: '', error: '' });
   const router = useRouter();
   const events = useEvents(process.browser && isIframe);
-  const onSubmit = createSubmit({ surveyId, ...state }, router, events);
+  const setError = setErrorState(state, setState);
+  const onSubmit = createSubmit(
+    { surveyId, ...state },
+    router,
+    setError(templates.MissingNoteError),
+    events
+  );
   const setValueForField = setValueForFieldInState(state, setState);
+  const handleClose = setError('');
 
   React.useEffect(() => {
     window.onload = function () {
@@ -170,6 +190,20 @@ export const SurveyPage: React.FC<LayoutProps> = ({
       <SurveySubmit themeOpts={themeOpts}>
         {templates.SendButtonMessage}
       </SurveySubmit>
+      <Snackbar
+        open={!!state.error}
+        autoHideDuration={themeOpts.Error.duration}
+        onClose={themeOpts.Error.closeOption && handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="error"
+          elevation={themeOpts.Error.elevation}
+          variant="filled"
+        >
+          {state.error}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };

@@ -6,6 +6,11 @@ export const DEFAULT_VALUES = {
   SurveySubmitBtnColor: 'primary',
   SurveyBoxBorderSize: '0px',
   SurveyBoxBorderRadius: '0px',
+  Error: {
+    duration: 6000,
+    closeOption: true,
+    elevation: 6,
+  },
 };
 
 export const AddThemeOptsDefaults = (

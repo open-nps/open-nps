@@ -29,6 +29,11 @@ exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render proper
     setValue={[Function]}
     themeOpts={
       Object {
+        "Error": Object {
+          "closeOption": true,
+          "duration": 6000,
+          "elevation": 6,
+        },
         "SurveyTopBrandImage": Object {
           "alt": "b",
           "url": "a",
@@ -51,6 +56,11 @@ exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render proper
   <SurveySubmit
     themeOpts={
       Object {
+        "Error": Object {
+          "closeOption": true,
+          "duration": 6000,
+          "elevation": 6,
+        },
         "SurveyTopBrandImage": Object {
           "alt": "b",
           "url": "a",
@@ -58,5 +68,17 @@ exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render proper
       }
     }
   />
+  <WithStyles(ForwardRef(Snackbar))
+    autoHideDuration={6000}
+    onClose={[Function]}
+    open={false}
+  >
+    <WithStyles(ForwardRef(Alert))
+      elevation={6}
+      onClose={[Function]}
+      severity="error"
+      variant="filled"
+    />
+  </WithStyles(ForwardRef(Snackbar))>
 </form>
 `;

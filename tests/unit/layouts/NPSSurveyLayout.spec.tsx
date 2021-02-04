@@ -33,6 +33,7 @@ describe('/src/layouts/NPSSurveyLayout', () => {
     CoreQuestionPhrase: 'a',
     ThanksPhrase: 'b',
     SendButtonMessage: 'c',
+    MissingNoteError: 'd',
   };
   const fakeConfigs = [
     { key: 'mui', values: fakeMuiValue },

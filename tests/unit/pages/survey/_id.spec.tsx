@@ -10,6 +10,7 @@ import {
   useEvents,
   handle404,
   handleRedirect,
+  setErrorState,
 } from '~/pages/survey/[id]';
 import { NextRouter } from 'next/router';
 import { shallow } from 'enzyme';
@@ -52,8 +53,11 @@ describe('/src/pages/survey/[id]', () => {
     const fakeEvent = ({
       preventDefault: jest.fn(),
     } as unknown) as React.FormEvent<HTMLFormElement>;
-    const createResponse = (obj: AnyObject) => {
-      const response = { json: jest.fn().mockResolvedValue(obj) };
+    const createResponse = (obj: AnyObject, status = 200) => {
+      const response = {
+        status: status,
+        json: jest.fn().mockResolvedValue(obj),
+      };
       (global.fetch as jest.Mock).mockResolvedValue(response);
       return response;
     };
@@ -61,7 +65,10 @@ describe('/src/pages/survey/[id]', () => {
     const fakeEvents = ({
       OpenNpsSubmit: jest.fn(),
       OpenNpsSuccess: jest.fn(),
+      OpenNpsError: jest.fn(),
     } as unknown) as OpenNpsEvents;
+
+    const fakeMissingNote = jest.fn();
 
     const baseAsserts = (response) => {
       expect(fakeEvents.OpenNpsSubmit).toHaveBeenCalledTimes(1);
@@ -83,7 +90,12 @@ describe('/src/pages/survey/[id]', () => {
     };
 
     it('should createSubmit right and trigger new route', async () => {
-      const onSubmit = createSubmit(fakeData, router, fakeEvents);
+      const onSubmit = createSubmit(
+        fakeData,
+        router,
+        fakeMissingNote,
+        fakeEvents
+      );
       const response = createResponse({ ok: 1 });
 
       await onSubmit(fakeEvent);
@@ -91,6 +103,7 @@ describe('/src/pages/survey/[id]', () => {
       baseAsserts(response);
       expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledTimes(1);
       expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledWith(fakeData);
+      expect(fakeEvents.OpenNpsError).not.toHaveBeenCalled();
       expect(router.push).toHaveBeenCalledTimes(1);
       expect(router.push).toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
@@ -98,14 +111,40 @@ describe('/src/pages/survey/[id]', () => {
     });
 
     it('should createSubmit right and not trigger new route', async () => {
-      const onSubmit = createSubmit(fakeData, router, fakeEvents);
+      const onSubmit = createSubmit(
+        fakeData,
+        router,
+        fakeMissingNote,
+        fakeEvents
+      );
       const response = createResponse({ ok: 0 });
 
       await onSubmit(fakeEvent);
 
       baseAsserts(response);
-      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalledTimes(1);
-      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalledWith(fakeData);
+      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalled();
+      expect(fakeEvents.OpenNpsError).not.toHaveBeenCalled();
+      expect(router.push).not.toHaveBeenCalledTimes(1);
+      expect(router.push).not.toHaveBeenCalledWith(
+        `/survey/thanks?surveyId=${fakeData.surveyId}`
+      );
+    });
+
+    it('should createSubmit right and handle an error', async () => {
+      const onSubmit = createSubmit(
+        fakeData,
+        router,
+        fakeMissingNote,
+        fakeEvents
+      );
+      const response = createResponse({ missing: 'note' }, 500);
+
+      await onSubmit(fakeEvent);
+
+      baseAsserts(response);
+      expect(fakeEvents.OpenNpsError).toHaveBeenCalledTimes(1);
+      expect(fakeEvents.OpenNpsError).toHaveBeenCalledWith(fakeData);
+      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalled();
       expect(router.push).not.toHaveBeenCalledTimes(1);
       expect(router.push).not.toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
@@ -131,6 +170,18 @@ describe('/src/pages/survey/[id]', () => {
     });
   });
 
+  describe('setErrorState', () => {
+    it('should change state properly', () => {
+      const setState = jest.fn();
+      const fakeError = 'foo error';
+
+      setErrorState({}, setState)(fakeError)();
+
+      expect(setState).toHaveBeenCalledTimes(1);
+      expect(setState).toHaveBeenCalledWith({ error: fakeError });
+    });
+  });
+
   describe('Page Component (SurveyPage)', () => {
     it('should render properly', () => {
       (process as Any).browser = true;
@@ -148,6 +199,11 @@ describe('/src/pages/survey/[id]', () => {
           SurveyTopBrandImage: {
             url: 'a',
             alt: 'b',
+          },
+          Error: {
+            duration: 6000,
+            elevation: 6,
+            closeOption: true,
           },
         },
         data: {
@@ -196,6 +252,7 @@ describe('/src/pages/survey/[id]', () => {
       events.OpenNpsChangeComment(survey);
       events.OpenNpsSubmit(survey);
       events.OpenNpsSuccess(survey);
+      events.OpenNpsError(survey);
       events.OpenNpsLoad(initialSurvey);
 
       const expecter = get(
@@ -204,13 +261,14 @@ describe('/src/pages/survey/[id]', () => {
       );
 
       expect(global.window.parent.postMessage).toHaveBeenCalledTimes(
-        willExecute ? 5 : 0
+        willExecute ? 6 : 0
       );
       expecter(1, createMessage('OpenNpsChangeNote', survey.note), '*');
       expecter(2, createMessage('OpenNpsChangeComment', survey.comment), '*');
       expecter(3, createMessage('OpenNpsSubmit', survey), '*');
       expecter(4, createMessage('OpenNpsSuccess', survey), '*');
-      expecter(5, createMessage('OpenNpsLoad', initialSurvey), '*');
+      expecter(5, createMessage('OpenNpsError', survey), '*');
+      expecter(6, createMessage('OpenNpsLoad', initialSurvey), '*');
     };
 
     it('should create events and not execute them', () => {

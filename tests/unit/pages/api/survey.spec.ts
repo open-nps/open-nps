@@ -67,6 +67,17 @@ describe('/pages/api/survey', () => {
   });
 
   describe('conclude', () => {
+    it('should concludeSurvey throw for missing note', async () => {
+      req.body = { comment: '', surveyId: fakeSurveyId };
+      await concludeSurvey(req, res);
+
+      expect(Survey.findOne).not.toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledTimes(1);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith({ missing: 'note' });
+    });
+
     it('should concludeSurvey correctly', async () => {
       const note = 10;
       const comment = 'foo bar';

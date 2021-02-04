@@ -36,4 +36,10 @@ declare interface ThemeOptionsConfigValues {
     alt?: string;
     width?: string;
   };
+
+  Error: {
+    duration: number;
+    closeOption: boolean;
+    elevation: number;
+  };
 }
