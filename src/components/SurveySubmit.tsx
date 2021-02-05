@@ -1,15 +1,17 @@
 import React from 'react';
 
 import MUIButton from '@material-ui/core/Button';
+import MUICircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles, createStyles } from '@material-ui/styles';
 
 interface Props {
   children: React.ReactChild;
   themeOpts: ThemeOptionsConfigValues;
+  isSending: boolean;
 }
 
 /* istanbul ignore next */
-const styles = (theme) =>
+const btnStyles = (theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
@@ -17,17 +19,33 @@ const styles = (theme) =>
     },
   });
 
-const Button = withStyles(styles)(MUIButton);
+/* istanbul ignore next */
+const loadStyles = () =>
+  createStyles({
+    root: {},
+  });
 
-export const SurveySubmit: React.FC<Props> = ({ themeOpts, children }) => (
+const Button = withStyles(btnStyles)(MUIButton);
+const CircularProgress = withStyles(loadStyles)(MUICircularProgress);
+
+export const SurveySubmit: React.FC<Props> = ({
+  isSending,
+  themeOpts,
+  children,
+}) => (
   <Button
     color={themeOpts.SurveySubmitBtnColor}
     variant="contained"
     type="submit"
     data-cy="SurveySubmit"
     fullWidth={themeOpts.SurveySubmitBtnFullWidth}
+    disabled={isSending}
   >
-    {children}
+    {isSending ? (
+      <CircularProgress size={themeOpts.SurveySubmitBtnLoadSize} />
+    ) : (
+      children
+    )}
   </Button>
 );
 

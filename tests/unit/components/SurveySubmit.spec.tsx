@@ -10,6 +10,7 @@ describe('/src/components/SurveyNotes', () => {
       SurveySubmitBtnColor: 'primary',
     } as ThemeOptionsConfigValues,
     children: 'FooBar',
+    isSending: false,
   };
 
   beforeEach(() => {
@@ -18,10 +19,11 @@ describe('/src/components/SurveyNotes', () => {
 
   it('should render properly', () => {
     const wrap = shallow(<SurveySubmit {...baseProps} />);
+    expect(wrap).toMatchSnapshot();
+  });
 
-    expect(wrap).toHaveProp('color', baseProps.themeOpts.SurveySubmitBtnColor);
-    expect(wrap).toHaveProp('variant', 'contained');
-    expect(wrap).toHaveProp('type', 'submit');
-    expect(wrap).toHaveText(baseProps.children);
+  it('should render properly with isSending === true', () => {
+    const wrap = shallow(<SurveySubmit {...baseProps} isSending={true} />);
+    expect(wrap).toMatchSnapshot();
   });
 });

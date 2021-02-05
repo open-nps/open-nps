@@ -53,6 +53,7 @@ describe('/src/pages/survey/[id]', () => {
     const fakeEvent = ({
       preventDefault: jest.fn(),
     } as unknown) as React.FormEvent<HTMLFormElement>;
+    const [isSending, setIsSending] = [false, jest.fn()];
     const createResponse = (obj: AnyObject, status = 200) => {
       const response = {
         status: status,
@@ -94,13 +95,13 @@ describe('/src/pages/survey/[id]', () => {
         fakeData,
         router,
         fakeMissingNote,
+        { isSending, setIsSending },
         fakeEvents
       );
-      const response = createResponse({ ok: 1 });
 
+      createResponse({ ok: 1 });
       await onSubmit(fakeEvent);
 
-      baseAsserts(response);
       expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledTimes(1);
       expect(fakeEvents.OpenNpsSuccess).toHaveBeenCalledWith(fakeData);
       expect(fakeEvents.OpenNpsError).not.toHaveBeenCalled();
@@ -115,6 +116,7 @@ describe('/src/pages/survey/[id]', () => {
         fakeData,
         router,
         fakeMissingNote,
+        { isSending, setIsSending },
         fakeEvents
       );
       const response = createResponse({ ok: 0 });
@@ -124,6 +126,8 @@ describe('/src/pages/survey/[id]', () => {
       baseAsserts(response);
       expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalled();
       expect(fakeEvents.OpenNpsError).not.toHaveBeenCalled();
+      expect(setIsSending).toHaveBeenCalledTimes(1);
+      expect(setIsSending).toHaveBeenNthCalledWith(1, true);
       expect(router.push).not.toHaveBeenCalledTimes(1);
       expect(router.push).not.toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
@@ -135,6 +139,7 @@ describe('/src/pages/survey/[id]', () => {
         fakeData,
         router,
         fakeMissingNote,
+        { isSending, setIsSending },
         fakeEvents
       );
       const response = createResponse({ missing: 'note' }, 500);
@@ -145,10 +150,32 @@ describe('/src/pages/survey/[id]', () => {
       expect(fakeEvents.OpenNpsError).toHaveBeenCalledTimes(1);
       expect(fakeEvents.OpenNpsError).toHaveBeenCalledWith(fakeData);
       expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalled();
+      expect(setIsSending).toHaveBeenCalledTimes(2);
+      expect(setIsSending).toHaveBeenNthCalledWith(1, true);
+      expect(setIsSending).toHaveBeenNthCalledWith(2, false);
       expect(router.push).not.toHaveBeenCalledTimes(1);
       expect(router.push).not.toHaveBeenCalledWith(
         `/survey/thanks?surveyId=${fakeData.surveyId}`
       );
+    });
+
+    it('should createSubmit avoid to make the process when isSending === true', async () => {
+      const onSubmit = createSubmit(
+        fakeData,
+        router,
+        fakeMissingNote,
+        { isSending: true, setIsSending },
+        fakeEvents
+      );
+
+      createResponse({ missing: 'note' }, 500);
+      await onSubmit(fakeEvent);
+
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(fakeEvents.OpenNpsError).not.toHaveBeenCalled();
+      expect(fakeEvents.OpenNpsSuccess).not.toHaveBeenCalled();
+      expect(setIsSending).not.toHaveBeenCalled();
+      expect(router.push).not.toHaveBeenCalled();
     });
   });
 

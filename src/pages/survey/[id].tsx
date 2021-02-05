@@ -52,9 +52,19 @@ export const createSubmit = (
   data: SubmitData,
   router: NextRouter,
   setMissingNote: () => void,
+  isSendingState: {
+    isSending: boolean;
+    setIsSending: (status: boolean) => void;
+  },
   events: OpenNpsEvents
 ) => async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
   e.preventDefault();
+
+  if (isSendingState.isSending) {
+    return;
+  }
+
+  isSendingState.setIsSending(true);
   events.OpenNpsSubmit(data);
   const response = await fetch(
     `${window.location.origin}/api/survey/conclude`,
@@ -73,6 +83,7 @@ export const createSubmit = (
   if (response.status === 500) {
     setMissingNote();
     events.OpenNpsError(data);
+    isSendingState.setIsSending(false);
   } else if (ok) {
     events.OpenNpsSuccess(data);
     router.push(`/survey/thanks?surveyId=${data.surveyId}`);
@@ -126,6 +137,7 @@ export const SurveyPage: React.FC<LayoutProps> = ({
   isIframe,
 }): React.ReactElement => {
   const [state, setState] = useState({ note: null, comment: '', error: '' });
+  const [isSending, setIsSending] = useState(false);
   const router = useRouter();
   const events = useEvents(process.browser && isIframe);
   const setError = setErrorState(state, setState);
@@ -133,6 +145,7 @@ export const SurveyPage: React.FC<LayoutProps> = ({
     { surveyId, ...state },
     router,
     setError(templates.MissingNoteError),
+    { isSending, setIsSending },
     events
   );
   const setValueForField = setValueForFieldInState(state, setState);
@@ -187,7 +200,7 @@ export const SurveyPage: React.FC<LayoutProps> = ({
         label={templates.SurveyCommentLabel}
         placeholder={templates.SurveyCommentPlaceholder}
       />
-      <SurveySubmit themeOpts={themeOpts}>
+      <SurveySubmit themeOpts={themeOpts} isSending={isSending}>
         {templates.SendButtonMessage}
       </SurveySubmit>
       <Snackbar

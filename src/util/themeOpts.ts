@@ -2,6 +2,7 @@ export const DEFAULT_VALUES = {
   SurveyNotesBtnSize: 'medium',
   SurveySubmitBtnSize: 'medium',
   SurveySubmitBtnVariant: 'contained',
+  SurveySubmitBtnLoadSize: 28,
   SurveyNotesBtnColor: 'primary',
   SurveySubmitBtnColor: 'primary',
   SurveyBoxBorderSize: '0px',

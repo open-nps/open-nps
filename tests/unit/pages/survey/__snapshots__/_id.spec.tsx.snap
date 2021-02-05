@@ -54,6 +54,7 @@ exports[`/src/pages/survey/[id] Page Component (SurveyPage) should render proper
     value=""
   />
   <SurveySubmit
+    isSending={false}
     themeOpts={
       Object {
         "Error": Object {

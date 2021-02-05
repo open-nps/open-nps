@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/src/components/SurveyNotes should render properly 1`] = `
+<WithStyles(WithStyles(ForwardRef(Button)))
+  color="primary"
+  data-cy="SurveySubmit"
+  disabled={false}
+  type="submit"
+  variant="contained"
+>
+  FooBar
+</WithStyles(WithStyles(ForwardRef(Button)))>
+`;
+
+exports[`/src/components/SurveyNotes should render properly with isSending === true 1`] = `
+<WithStyles(WithStyles(ForwardRef(Button)))
+  color="primary"
+  data-cy="SurveySubmit"
+  disabled={true}
+  type="submit"
+  variant="contained"
+>
+  <WithStyles(WithStyles(ForwardRef(CircularProgress))) />
+</WithStyles(WithStyles(ForwardRef(Button)))>
+`;

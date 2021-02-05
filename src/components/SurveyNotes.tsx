@@ -17,14 +17,19 @@ export const Button = withStyles(() => ({
 const styles = (theme) =>
   createStyles({
     buttonDiv: {
+      display: 'grid',
+      gridTemplateColumns: 'auto auto auto auto auto auto',
       maxWidth: '620px',
       width: '100%',
-      display: 'flex',
       justifyContent: 'space-around',
       flexWrap: 'wrap',
 
       '& > *': {
         marginBottom: theme.spacing(1),
+      },
+
+      '@media (min-width: 600px)': {
+        display: 'flex',
       },
     },
   });
