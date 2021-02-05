@@ -70,7 +70,7 @@ export const SurveySchema = new Schema<ISurvey>(
   { timestamps: true }
 );
 
-export function getOverrideConfigs(): ITag['overrideConfigs'][] {
+export function getOverrideConfigs(): Promise<ITag['overrideConfigs'][]> {
   return Tag.find({
     name: { $in: this.tags },
   })

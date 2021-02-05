@@ -51,9 +51,12 @@ export const HookSchema = new Schema<IHook, HookModel>(
 export function findByTargetMappedByEvent(
   this: HookModel,
   target: string
-): Record<HookEvent, IHook> {
+): Promise<Record<HookEvent, IHook>> {
   return this.find({ target }).then((hooks) =>
-    hooks.reduce((a, c) => ({ ...a, [c.event]: c }), {})
+    hooks.reduce(
+      (a, c) => ({ ...a, [c.event]: c }),
+      {} as Record<HookEvent, IHook>
+    )
   );
 }
 
