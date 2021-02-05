@@ -35,7 +35,7 @@ export const createResolveHooks = async (
         )
       );
     } catch (error) {
-      logger('error', 'Error', { key, error });
+      logger('error', 'Error', { key, error: error.toString() });
     }
   };
 };

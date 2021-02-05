@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
@@ -175,17 +175,20 @@ export const removeLocalJSS = (): void => {
 export const withLayout = (
   Component: React.FC<LayoutProps>
 ): React.FC<Props> => ({ mui, ...props }): React.ReactElement => {
+  const [key, setKey] = useState(0);
   const layoutClasses: LayoutProps['layoutClasses'] = makeStyles(
     childrenStyles(props.themeOpts)
   )();
   const classes = useStyles();
 
+  /* istanbul ignore next */
+  React.useEffect(() => setKey(1), []);
   React.useEffect(removeLocalJSS, []);
 
   return (
     <ThemeProvider theme={createMuiTheme(mui)}>
       <CssBaseline />
-      <div className={classes.root}>
+      <div className={classes.root} key={key}>
         <Component {...props} layoutClasses={layoutClasses} />
       </div>
     </ThemeProvider>

@@ -20,6 +20,6 @@ exports[`/src/components/SurveyNotes should render properly with isSending === t
   type="submit"
   variant="contained"
 >
-  <WithStyles(WithStyles(ForwardRef(CircularProgress))) />
+  <WithStyles(ForwardRef(CircularProgress)) />
 </WithStyles(WithStyles(ForwardRef(Button)))>
 `;

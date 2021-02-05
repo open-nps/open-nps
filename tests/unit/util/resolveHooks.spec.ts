@@ -88,7 +88,7 @@ describe('src/util/resolveHooks', () => {
     });
     expect(logger).toHaveBeenNthCalledWith(2, 'error', 'Error', {
       key: HookEvent.ON_SUBMIT,
-      error: new Error(fakeError),
+      error: new Error(fakeError).toString(),
     });
     expect(Hook.findByTargetMappedByEvent).toHaveBeenCalledTimes(1);
     expect(Hook.findByTargetMappedByEvent).toHaveBeenCalledWith(fakeTarget);

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import MUIButton from '@material-ui/core/Button';
-import MUICircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles, createStyles } from '@material-ui/styles';
 
 interface Props {
@@ -19,14 +19,7 @@ const btnStyles = (theme) =>
     },
   });
 
-/* istanbul ignore next */
-const loadStyles = () =>
-  createStyles({
-    root: {},
-  });
-
 const Button = withStyles(btnStyles)(MUIButton);
-const CircularProgress = withStyles(loadStyles)(MUICircularProgress);
 
 export const SurveySubmit: React.FC<Props> = ({
   isSending,
