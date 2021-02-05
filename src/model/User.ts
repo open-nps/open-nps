@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import timestamp from 'mongoose-timestamp';
 
 export const hashPassword = (value: string): string =>
   crypto.createHash('sha256').update(value).digest('hex');
@@ -43,28 +42,29 @@ interface UserModel extends Model<IUser> {
   findByEmailAndPassword(email: string, password: string): Promise<IUser>;
 }
 
-export const UserSchema = new Schema<IUser, UserModel>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  roles: [
-    {
+export const UserSchema = new Schema<IUser, UserModel>(
+  {
+    email: {
       type: String,
-      enum: Role,
+      required: true,
+      unique: true,
     },
-  ],
-  deletedAt: {
-    type: Date,
+    password: {
+      type: String,
+      required: true,
+    },
+    roles: [
+      {
+        type: String,
+        enum: Role,
+      },
+    ],
+    deletedAt: {
+      type: Date,
+    },
   },
-});
-
-UserSchema.plugin(timestamp);
+  { timestamps: true }
+);
 
 export function findByEmailAndPassword(
   this: UserModel,

@@ -1,6 +1,5 @@
 import dateformat from 'dateformat';
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import timestamp from 'mongoose-timestamp';
 
 import { ITarget } from './Target';
 import Tag, { ITag } from './Tag';
@@ -33,42 +32,43 @@ const reviewerMeta = loadFromProcessOrFile(
   reviewerMetaFile
 );
 
-export const SurveySchema = new Schema<ISurvey>({
-  target: {
-    ref: 'Target',
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-  meta: surveyMeta,
-  reviewer: {
-    id: {
-      type: String,
+export const SurveySchema = new Schema<ISurvey>(
+  {
+    target: {
+      ref: 'Target',
+      type: Schema.Types.ObjectId,
       required: true,
     },
-    ...reviewerMeta,
-  },
-  tags: [
-    {
-      type: String,
+    meta: surveyMeta,
+    reviewer: {
+      id: {
+        type: String,
+        required: true,
+      },
+      ...reviewerMeta,
+    },
+    tags: [
+      {
+        type: String,
+        index: true,
+      },
+    ],
+    note: {
+      type: Number,
+      max: 10,
+      min: 1,
+    },
+    concluded: {
+      type: Boolean,
+      default: false,
       index: true,
     },
-  ],
-  note: {
-    type: Number,
-    max: 10,
-    min: 1,
+    comment: {
+      type: String,
+    },
   },
-  concluded: {
-    type: Boolean,
-    default: false,
-    index: true,
-  },
-  comment: {
-    type: String,
-  },
-});
-
-SurveySchema.plugin(timestamp);
+  { timestamps: true }
+);
 
 export function getOverrideConfigs(): ITag['overrideConfigs'][] {
   return Tag.find({

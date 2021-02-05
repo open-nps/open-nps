@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import timestamp from 'mongoose-timestamp';
 import { IConfig } from './Config';
 
 export interface ITag extends Document {
@@ -7,21 +6,22 @@ export interface ITag extends Document {
   overrideConfigs?: string[] | IConfig[];
 }
 
-export const TagSchema = new Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  overrideConfigs: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Config',
+export const TagSchema = new Schema(
+  {
+    name: {
+      type: String,
+      unique: true,
+      required: true,
     },
-  ],
-});
-
-TagSchema.plugin(timestamp);
+    overrideConfigs: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Config',
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 export default (mongoose.models.Tag ||
   mongoose.model<ITag>('Tag', TagSchema)) as Model<ITag>;

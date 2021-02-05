@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import timestamp from 'mongoose-timestamp';
 import { ITarget } from './Target';
 
 export enum HookEvent {
@@ -26,25 +25,28 @@ interface HookModel extends Model<IHook> {
   findByTargetMappedByEvent(target: string): Record<HookEvent, IHook>;
 }
 
-export const HookSchema = new Schema<IHook, HookModel>({
-  event: {
-    type: String,
-    enum: HookEvents,
-    index: true,
-    required: true,
-  },
-  urls: [
-    {
+export const HookSchema = new Schema<IHook, HookModel>(
+  {
+    event: {
       type: String,
+      enum: HookEvents,
+      index: true,
+      required: true,
     },
-  ],
-  target: {
-    type: Schema.Types.ObjectId,
-    ref: 'Target',
-    required: true,
-    index: true,
+    urls: [
+      {
+        type: String,
+      },
+    ],
+    target: {
+      type: Schema.Types.ObjectId,
+      ref: 'Target',
+      required: true,
+      index: true,
+    },
   },
-});
+  { timestamps: true }
+);
 
 export function findByTargetMappedByEvent(
   this: HookModel,
@@ -55,7 +57,6 @@ export function findByTargetMappedByEvent(
   );
 }
 
-HookSchema.plugin(timestamp);
 HookSchema.static('findByTargetMappedByEvent', findByTargetMappedByEvent);
 
 export default (mongoose.models.Hook ||
