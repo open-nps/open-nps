@@ -2,11 +2,30 @@ import { NextApiResponse, NextApiRequest } from 'next';
 
 import Hook from '~/model/Hook';
 import Target from '~/model/Target';
+import { MongooseQueryParser } from 'mongoose-query-parser';
 
 import { createApiHandler } from '~/util/api';
 import { authMiddleware, RoleEnum } from '~/util/authMiddleware';
 import { addOrPop } from '~/util/addOrPop';
 import { LoggerNamespace } from '~/util/logger';
+
+const parser = new MongooseQueryParser();
+
+export const findHooks = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> => {
+  const logger = LoggerNamespace('findHooks');
+
+  logger('http', 'Enter', { query: req.query });
+  const { filter, ...opts } = parser.parse(req.query);
+
+  logger('debug', 'pre-find', { filter, opts });
+  const hooks = await Hook.find(filter, opts).populate('target', { name: 1 });
+
+  logger('http', 'Out');
+  return res.json({ hooks });
+};
 
 export const createHook = async (
   req: NextApiRequest,
@@ -47,6 +66,7 @@ export const updateHook = async (
 };
 
 export default createApiHandler({
+  GET: authMiddleware([RoleEnum.SETUP_READ], findHooks),
   POST: authMiddleware([RoleEnum.SETUP_WRITE], createHook),
   PUT: authMiddleware([RoleEnum.SETUP_READ, RoleEnum.SETUP_WRITE], updateHook),
 });

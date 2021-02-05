@@ -7,10 +7,10 @@ import { NextApiResponse, NextApiRequest } from 'next';
 import Hook, { HookEvent } from '~/model/Hook';
 import Target from '~/model/Target';
 
-import { createHook, updateHook } from '~/pages/api/hook';
+import { createHook, updateHook, findHooks } from '~/pages/api/hook';
 
 describe('/pages/api/hook', () => {
-  const req = {} as NextApiRequest;
+  const req = { query: {} } as NextApiRequest;
   const res = {} as NextApiResponse;
   const fakeId = 'foo';
   const fakeTarget = { _id: '123', name: 'opennps' };
@@ -22,6 +22,17 @@ describe('/pages/api/hook', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  it('should findHooks properly', async () => {
+    const fakeHooks = [1, 2];
+    const populate = jest.fn().mockResolvedValue(fakeHooks);
+    (Hook.find as jest.Mock).mockReturnValue({ populate });
+
+    await findHooks(req, res);
+
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(res.json).toHaveBeenCalledWith({ hooks: fakeHooks });
   });
 
   it('should createHook properly', async () => {
